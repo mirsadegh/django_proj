@@ -12,7 +12,29 @@ from .tokens import account_activation_token
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import views
 from .forms import EmailAuthenticationForm
+from django.urls import reverse
 
+
+
+class EmailLoginView(View):
+    form_class = EmailAuthenticationForm
+    template_name = 'accounts/login.html'
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request, data=request.POST) # Pass the request object!
+        if form.is_valid():
+            login(request, form.get_user())
+            next_page = request.GET.get('next')
+            if next_page:
+                return redirect(next_page)
+            else:
+                return redirect(reverse('index'))
+
+        return render(request, self.template_name, {'form': form})
 
 
 class RegisterView(View):
@@ -47,16 +69,10 @@ class RegisterView(View):
 
 
 
-class LoginCustomView(views.LoginView):
-    template_name = 'accounts/login.html'
-    form_class=EmailAuthenticationForm
-    
-
-
 
 class ActivateAccountView(View):
     invalid_template_name = 'accounts/activation_invalid.html'
-    success_redirect = 'home'
+    success_redirect = 'index'
 
     def get(self, request, uidb64, token):
         try:
