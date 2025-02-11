@@ -1,1 +1,11 @@
-<p>activation invalid</p>
+{% extends 'accounts/base.html' %} {% load i18n %} {% block content %}
+<div class="container mt-5">
+  <div class="alert alert-danger text-center">
+    <h2>{% trans "Activation Invalid" %}</h2>
+    <p class="mt-3">
+      {% trans "The activation link is invalid or has expired. Please contact
+      support or try registering again." %}
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -22,6 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-9is7tac5n2)hu#yrmlu-74j%%h0x*kj$o!b9ci*e+_b43ome21"
 
+
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -108,9 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "fa-ir"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Tehran"
 
 USE_I18N = True
 
@@ -148,5 +153,7 @@ AUTHENTICATION_BACKENDS = [
     'accounts.backends.EmailAuthBackend',  # Replace with your path
     'django.contrib.auth.backends.ModelBackend',  # Optional: Fallback
 ]
+
+
 
 

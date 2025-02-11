@@ -1,57 +1,47 @@
-{% extends 'accounts/base.html' %} {% block title %} Email Confirmation Required
-{% endblock %} {% block content %}
-<i class="bi bi-envelope-check auth-icon mb-4"></i>
-<h1 class="h3 mb-3">Please confirm your email</h1>
-<p class="text-muted mb-4">
-  We've sent a confirmation link to <strong>user@example.com</strong>. Please
-  check your inbox and click the link to verify your email address.
-</p>
+{% extends 'accounts/base.html' %} 
+{% block title %} 
+تایید ایمیل 
+{% endblock %} 
 
-<div class="d-grid gap-2 mb-3">
-  <button class="btn btn-primary btn-lg" id="resendButton">
-    Resend Confirmation Email
-  </button>
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+      <div class="col-md-8">
+          <div class="card">
+              <div class="card-header">
+                  تایید ایمیل
+              </div>
+              {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+              <div class="card-body">
+                  <p>
+                      یک ایمیل حاوی لینک تایید به ایمیل شما ارسال شده است.
+                      لطفا برای فعال کردن حساب کاربری خود، روی لینک موجود در ایمیل کلیک کنید.
+                  </p>
+                  <p>
+                      اگر ایمیل را دریافت نکرده اید، لطفا پوشه спам خود را بررسی کنید.
+                  </p>
+                  <div class="text-center">
+                    {{ email }}
+                    <form method="POST" action="{% url 'resend_activation_email' %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="email" value="{{ email }}">
+                      <button type="submit" class="btn btn-primary">
+                          ارسال مجدد ایمیل فعال‌سازی
+                      </button>
+                       <a href="/" class="btn btn-secondary">بازگشت به صفحه اصلی</a>
+                   </form>
+                     
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
-
-<div class="resend-countdown" id="countdown">
-  Didn't receive the email? You can resend in <span id="timer">60</span> seconds
-</div>
-{% endblock %} {% block extra_js %}
-<script>
-  let timer;
-  let countdown = 60;
-  const resendButton = document.getElementById("resendButton");
-  const timerDisplay = document.getElementById("timer");
-
-  function startCountdown() {
-    resendButton.disabled = true;
-    timer = setInterval(() => {
-      countdown--;
-      timerDisplay.textContent = countdown;
-
-      if (countdown <= 0) {
-        clearInterval(timer);
-        resendButton.disabled = false;
-        document.getElementById("countdown").textContent =
-          "Didn't receive the email? You can now resend the confirmation.";
-      }
-    }, 1000);
-  }
-
-  resendButton.addEventListener("click", () => {
-    // Add your resend email logic here
-    console.log("Resending confirmation email...");
-
-    // Reset countdown
-    countdown = 60;
-    timerDisplay.textContent = countdown;
-    document.getElementById("countdown").innerHTML =
-      'Didn\'t receive the email? You can resend in <span id="timer">60</span> seconds';
-
-    startCountdown();
-  });
-
-  // Start initial countdown
-  startCountdown();
-</script>
 {% endblock %}
+

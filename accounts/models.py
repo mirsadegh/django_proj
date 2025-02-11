@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -21,21 +22,30 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
-        
+
         return self.create_user(email, password, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(_('email address'), unique=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_verified = models.BooleanField(default=False)
-    phone_number = models.CharField(max_length=10, null=True, blank=True)
-    date_of_birth = models.DateField(null=True, blank=True)
-    
+    name = models.CharField(null=True, blank=True,
+                            max_length=150,  verbose_name=_('نام کاربر'))
+    email = models.EmailField(unique=True, verbose_name=_("ایمیل"))
+    is_active = models.BooleanField(default=True, verbose_name=_("فعال"))
+    is_staff = models.BooleanField(default=False, verbose_name=_("کارمند"))
+    is_verified = models.BooleanField(
+        default=False, verbose_name=_("تایید ایمیل"))
+    phone_number = models.CharField(
+        max_length=10, null=True, blank=True, verbose_name=_("شماره تلفن"))
+    date_of_birth = models.DateField(
+        null=True, blank=True, verbose_name=_("تاریخ تولد"))
+
+    class Meta:
+        verbose_name = _('کاربر ')
+        verbose_name_plural = _('کاربران ')
+
     def __str__(self):
         return self.email
-    
+
     def get_username(self):
         return self.email
 
