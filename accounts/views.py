@@ -132,8 +132,6 @@ class ResendActivationEmailView(View):
 
 
 
-
-
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'accounts/password_reset_form.html'
     email_template_name = 'accounts/password_reset_email.html'
