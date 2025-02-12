@@ -9,8 +9,6 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from .models import CustomUser
 from .tokens import account_activation_token
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth import views
 from .forms import EmailAuthenticationForm
 from django.urls import reverse
 from .mixins import AnonymousUserRequiredMixin
@@ -18,9 +16,9 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.views import PasswordResetDoneView
 from django.contrib.auth import get_user_model
-from django.views.generic.edit import FormView
-from django.contrib.auth.forms import PasswordResetForm
+
 from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
 
 
 class EmailLoginView(AnonymousUserRequiredMixin, View):
@@ -133,24 +131,20 @@ class ResendActivationEmailView(View):
         return render(request, self.template_name, {'email': email})
 
 
-class PasswordResetView(FormView):
-    template_name = 'accounts/password_reset_form.html'
-    form_class = PasswordResetForm
-    success_url = reverse_lazy('password_reset_done')
 
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-        form.save(
-            request=self.request,
-            use_https=self.request.is_secure(),
-            email_template_name='accounts/password_reset_email.html',
-            extra_email_context={}
-        )
-        return super().form_valid(form)
+
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'accounts/password_reset_form.html'
+    email_template_name = 'accounts/password_reset_email.html'
+    success_url = reverse_lazy('password_reset_done')
+    extra_email_context = None  # Explicitly set default value
 
     def get_success_url(self):
+        """Append email parameter to success URL"""
+        base_url = super().get_success_url()
         email = self.request.POST.get('email', '')
-        return f"{super().get_success_url()}?email={email}"
+        return f"{base_url}?email={email}"
 
 
 
