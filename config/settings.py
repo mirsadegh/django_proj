@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     "accounts.apps.AccountsConfig",
     "main.apps.MainConfig",
+    
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,12 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Global static directory
 ]
+import os
+# MEDIA_ROOT = BASE_DIR / 'media'  # File system path to store media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'  # URL prefix for media files
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
