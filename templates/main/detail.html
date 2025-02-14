@@ -1,7 +1,8 @@
 {% extends 'main/base.html' %}
-  
+{% load humanize %} 
+{% load static %}
   {% block title %}
-        <title>صفحه جز‍‍ییات </title>
+        <title>صفحه جزییات </title>
   {% endblock  %}
     
 
@@ -42,19 +43,19 @@
 					<div class="col-md-5 col-md-push-2">
 						<div id="product-main-img">
 							<div class="product-preview">
-								<img src="./img/product01.png" alt="">
+								<img src="{% static 'main/img/product01.png' %}" alt="">
 							</div>
 
 							<div class="product-preview">
-								<img src="./img/product03.png" alt="">
+								<img src="{% static 'main/img/product03.png' %}" alt="">
 							</div>
 
 							<div class="product-preview">
-								<img src="./img/product06.png" alt="">
+								<img src="{% static 'main/img/product06.png' %}" alt="">
 							</div>
 
 							<div class="product-preview">
-								<img src="./img/product08.png" alt="">
+								<img src="{% static 'main/img/product08.png' %}" alt="">
 							</div>
 						</div>
 					</div>
@@ -64,19 +65,19 @@
 					<div class="col-md-2  col-md-pull-5">
 						<div id="product-imgs">
 							<div class="product-preview">
-								<img src="./img/product01.png" alt="">
+								<img src="{% static 'main/img/product01.png' %}" alt="">
 							</div>
 
 							<div class="product-preview">
-								<img src="./img/product03.png" alt="">
+								<img src="{% static 'main/img/product03.png' %}" alt="">
 							</div>
 
 							<div class="product-preview">
-								<img src="./img/product06.png" alt="">
+								<img src="{% static 'main/img/product06.png' %}" alt="">
 							</div>
 
 							<div class="product-preview">
-								<img src="./img/product08.png" alt="">
+								<img src="{% static 'main/img/product08.png' %}" alt="">
 							</div>
 						</div>
 					</div>
@@ -85,7 +86,7 @@
 					<!-- Product details -->
 					<div class="col-md-5">
 						<div class="product-details">
-							<h2 class="product-name">product name goes here</h2>
+							<h2 class="product-name">{{ product.title }}</h2>
 							<div>
 								<div class="product-rating">
 									<i class="fa fa-star"></i>
@@ -97,41 +98,22 @@
 								<a class="review-link" href="#">10 Review(s) | Add your review</a>
 							</div>
 							<div>
-								<h3 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h3>
-								<span class="product-available">In Stock</span>
+								<h3 class="product-price">{{ product.price|intcomma }}T 
+									<del class="product-old-price">{{product.price|intcomma}}T </del></h3>
+								<span class="product-available">{{ product.available }}</span>
 							</div>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+							<p>{{ product.description|striptags|truncatewords:30 }}</p>
 
-							<div class="product-options">
-								<label>
-									Size
-									<select class="input-select">
-										<option value="0">X</option>
-									</select>
-								</label>
-								<label>
-									Color
-									<select class="input-select">
-										<option value="0">Red</option>
-									</select>
-								</label>
-							</div>
+							
 
 							<div class="add-to-cart">
-								<div class="qty-label">
-									Qty
-									<div class="input-number">
-										<input type="number">
-										<span class="qty-up">+</span>
-										<span class="qty-down">-</span>
-									</div>
-								</div>
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+								
+								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> افزودن به سبد</button>
 							</div>
 
 							<ul class="product-btns">
-								<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
-								<li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>
+								<li><a href="#"><i class="fa fa-heart-o"></i> افزودن به علاقمندی</a></li>
+								<li><a href="#"><i class="fa fa-exchange"></i>مقایسه</a></li>
 							</ul>
 
 							<ul class="product-links">
@@ -157,9 +139,9 @@
 						<div id="product-tab">
 							<!-- product tab nav -->
 							<ul class="tab-nav">
-								<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-								<li><a data-toggle="tab" href="#tab2">Details</a></li>
-								<li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+								<li class="active"><a data-toggle="tab" href="#tab1">توضیحات</a></li>
+								<li><a data-toggle="tab" href="#tab2">جزییات</a></li>
+								<li><a data-toggle="tab" href="#tab3">نظرات (3)</a></li>
 							</ul>
 							<!-- /product tab nav -->
 
@@ -169,7 +151,7 @@
 								<div id="tab1" class="tab-pane fade in active">
 									<div class="row">
 										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+											<p>{{ product.description }}</p>
 										</div>
 									</div>
 								</div>
@@ -353,7 +335,7 @@
 															<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
 														</div>
 													</div>
-													<button class="primary-btn">Submit</button>
+													<button class="primary-btn">ارسال</button>
 												</form>
 											</div>
 										</div>
@@ -382,7 +364,7 @@
 
 					<div class="col-md-12">
 						<div class="section-title text-center">
-							<h3 class="title">Related Products</h3>
+							<h3 class="title">محصولات مرتبط</h3>
 						</div>
 					</div>
 
@@ -390,7 +372,7 @@
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
-								<img src="./img/product01.png" alt="">
+								<img src="{% static 'main/img/product01.png' %}" alt="">
 								<div class="product-label">
 									<span class="sale">-30%</span>
 								</div>
@@ -418,7 +400,7 @@
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
-								<img src="./img/product02.png" alt="">
+								<img src="{% static 'main/img/product02.png' %}" alt="">
 								<div class="product-label">
 									<span class="new">NEW</span>
 								</div>
@@ -453,7 +435,7 @@
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
-								<img src="./img/product03.png" alt="">
+								<img src="{% static 'main/img/product03.png' %}" alt="">
 							</div>
 							<div class="product-body">
 								<p class="product-category">Category</p>
@@ -483,7 +465,7 @@
 					<div class="col-md-3 col-xs-6">
 						<div class="product">
 							<div class="product-img">
-								<img src="./img/product04.png" alt="">
+								<img src="{% static 'main/img/product04.png' %}" alt="">
 							</div>
 							<div class="product-body">
 								<p class="product-category">Category</p>
@@ -511,44 +493,9 @@
 		</div>
 		<!-- /Section -->
 
-		<!-- NEWSLETTER -->
-		<div id="newsletter" class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<div class="col-md-12">
-						<div class="newsletter">
-							<p>Sign Up for the <strong>NEWSLETTER</strong></p>
-							<form>
-								<input class="input" type="email" placeholder="Enter Your Email">
-								<button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
-							</form>
-							<ul class="newsletter-follow">
-								<li>
-									<a href="#"><i class="fa fa-facebook"></i></a>
-								</li>
-								<li>
-									<a href="#"><i class="fa fa-twitter"></i></a>
-								</li>
-								<li>
-									<a href="#"><i class="fa fa-instagram"></i></a>
-								</li>
-								<li>
-									<a href="#"><i class="fa fa-pinterest"></i></a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
-		<!-- /NEWSLETTER -->
-
+	
 		{% endblock  %}
 		
 
 		
-
+		 <!-- شماره پیگیری خرید اینترنتی23446039117 -->

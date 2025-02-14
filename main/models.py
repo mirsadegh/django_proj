@@ -24,10 +24,10 @@ class Product(models.Model):
         related_name='products',
         verbose_name="دسته‌بندی"
     )
-    slug = models.SlugField(max_length=200, unique=True, verbose_name='آدرس یکتا')
+    slug = models.SlugField(max_length=200, unique=True, verbose_name='آدرس یکتا',allow_unicode=True)
     description = models.TextField(verbose_name='توضیحات')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='قیمت')
-    image = models.ImageField(upload_to='product_images', null=True, blank=True, verbose_name='تصویر محصول')
+    price = models.IntegerField(verbose_name='قیمت')
+    image = models.ImageField(upload_to='product_images', verbose_name='تصویر محصول')
     available = models.BooleanField(default=True, verbose_name="موجود")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='آخرین بروزرسانی')
@@ -55,7 +55,7 @@ class Laptop(models.Model):
     screen_size = models.CharField(max_length=50, verbose_name="اندازه صفحه نمایش")
 
     def __str__(self):
-        return f"Laptop: {self.product.name}"
+        return f"Laptop: {self.product.title}"
     
     class Meta: 
         verbose_name = 'لپ تاپ'
