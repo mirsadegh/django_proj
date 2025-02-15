@@ -1,0 +1,144 @@
+{% load static %}
+
+
+<header>
+    <!-- TOP HEADER -->
+    <div id="top-header">
+        <div class="container">
+            
+                <ul class="header-links pull-left">
+                    {% if request.user.is_authenticated %}
+                    
+                    <li><a href="#"><i class="fa fa-user-o"></i> {{ request.user.name|default:request.user.email  }}</a></li>
+                    <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
+                        
+                          {% csrf_token %} 
+                    </form>
+                  
+                    <li><a href="{% url 'logout' %}" id="logout-link"><i class="fa fa-sign-out fa-1x fa-flip-horizontal" aria-hidden="true"></i></li>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            $(document).ready(function() {
+                              // Attach click event handler to the logout link
+                              $("#logout-link").on("click", function(event) {
+                                event.preventDefault(); // Prevent default anchor tag behavior
+                      
+                                // Optionally, prompt a confirmation before logging out
+                                if (confirm("Are you sure you want to log out?")) {
+                                  $("#logout-form").submit(); // Submit the hidden logout form
+                                }
+                              });
+                            });
+                          </script>
+                    {% else %}
+                     <li><a href="{% url 'login' %}"><i class="fa fa-user-o"></i> ورود</a></li>
+                     <li><a href="{% url 'register' %}"><i class="fa fa-user-o"></i> ثبت‌نام</a></li>
+                    {% endif %}
+
+                </ul>
+        </div>
+    </div>
+    <!-- /TOP HEADER -->
+
+    <!-- MAIN HEADER -->
+    <div id="header">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- LOGO -->
+                <div class="col-md-3">
+                    <div class="header-logo">
+                        <a href="#" class="logo">
+                            <img src="{% static 'main/img/logo.png'  %}" alt="">
+                        </a>
+                    </div>
+                </div>
+                <!-- /LOGO -->
+
+                <!-- SEARCH BAR -->
+                <div class="col-md-6">
+                    <div class="header-search text-right">
+                        <form>
+                            
+                            <input class="input" placeholder="جستجو">
+                            <button class="search-btn">جستجو</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /SEARCH BAR -->
+
+                <!-- ACCOUNT -->
+                <div class="col-md-3 clearfix">
+                    <div class="header-ctn">
+                        <!-- Wishlist -->
+                        <div>
+                            <a href="#">
+                                <i class="fa fa-heart-o"></i>
+                                <span>علاقه مندی</span>
+                                <div class="qty">2</div>
+                            </a>
+                        </div>
+                        <!-- /Wishlist -->
+
+                        <!-- Cart -->
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span>سبد خرید</span>
+                                <div class="qty">3</div>
+                            </a>
+                            <div class="cart-dropdown right">
+                                <div class="cart-list">
+                                    <div class="product-widget">
+                                        <div class="product-img">
+                                            <img src="{% static 'main/img/product01.png' %}" alt="">
+                                        </div>
+                                        <div class="product-body text-right">
+                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
+                                            <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
+                                        </div>
+                                        <button class="delete"><i class="fa fa-close"></i></button>
+                                    </div>
+
+                                    <div class="product-widget">
+                                        <div class="product-img">
+                                            <img src="{% static 'main/img/product02.png' %}" alt="">
+                                        </div>
+                                        <div class="product-body text-right">
+                                            <h3 class="product-name"><a href="#">product name goes here</a></h3>
+                                            <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
+                                        </div>
+                                        <button class="delete"><i class="fa fa-close"></i></button>
+                                    </div>
+                                </div>
+                                <div class="cart-summary">
+                                    <small>3 Item(s) selected</small>
+                                    <h5>SUBTOTAL: $2940.00</h5>
+                                </div>
+                                <div class="cart-btns">
+                                    <a href="#">View Cart</a>
+                                    <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Cart -->
+
+                        <!-- Menu Toogle -->
+                        <div class="menu-toggle">
+                            <a href="#">
+                                <i class="fa fa-bars"></i>
+                                <span>Menu</span>
+                            </a>
+                        </div>
+                        <!-- /Menu Toogle -->
+                    </div>
+                </div>
+                <!-- /ACCOUNT -->
+            </div>
+            <!-- row -->
+        </div>
+        <!-- container -->
+    </div>
+    <!-- /MAIN HEADER -->
+</header>

@@ -98,7 +98,7 @@
 								<a class="review-link" href="#">10 Review(s) | Add your review</a>
 							</div>
 							<div>
-								<h3 class="product-price">{{ product.price|intcomma }}T 
+								<h3 class="product-price">{{ product.price|floatformat:2|intcomma }}T 
 									<del class="product-old-price">{{product.price|intcomma}}T </del></h3>
 								<span class="product-available">{{ product.available }}</span>
 							</div>
