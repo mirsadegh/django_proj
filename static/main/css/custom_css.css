@@ -137,8 +137,81 @@
    }
 
 
+.cursor-pointer {
+    cursor: pointer;
+}
 
 
+
+
+ /* rating  */
+.rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    color: #ddd;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    width: 1.1em;
+    cursor: pointer;
+}
+
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked ~ label {
+    color: #ffc107;
+}
+
+.rating-display .fas {
+    color: #ffc107;
+}
+
+.rating-display .far {
+    color: #ddd;
+}
+
+
+
+.rating-display {
+    direction: ltr;
+    display: inline-block;
+    unicode-bidi: bidi-override;
+}
+
+.rating-display .fa-star {
+    color: #ffd700;
+    font-size: 1.2em;
+    padding: 0 1px;
+}
+
+.review-form .stars {
+    direction: ltr;
+    display: inline-block;
+}
+
+.review-form .stars input[type="radio"] {
+    display: none;
+}
+
+.review-form .stars label {
+    float: right;
+    padding: 2px;
+    font-size: 24px;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.review-form .stars input[type="radio"]:checked ~ label {
+    color: #ffd700;
+}
 
 
 

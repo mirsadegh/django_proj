@@ -164,5 +164,32 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',  # Capture all levels for debugging
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',  # Create a log file named 'debug.log'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'your_app_name': { # Change 'your_app_name' to the name of your Django app
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
+
+
 
 

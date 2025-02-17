@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import Category, Product, Laptop, Mobile
+from .models import Category, Product, Laptop, Mobile, Rating
 
 # ثبت مدل دسته‌بندی
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
-    prepopulated_fields = {'slug': ('name',)}  # تولید خودکار slug بر اساس نام
+    list_display = ('name', )
+    
 
 # ثبت مدل محصول (مشترک برای همه محصولات)
 class ProductAdmin(admin.ModelAdmin):
@@ -28,3 +28,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Laptop, LaptopAdmin)
 admin.site.register(Mobile, MobileAdmin)
+admin.site.register(Rating)
