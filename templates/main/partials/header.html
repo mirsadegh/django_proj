@@ -15,21 +15,9 @@
                           {% csrf_token %} 
                     </form>
                   
-                    <li><a href="{% url 'logout' %}" id="logout-link"><i class="fa fa-sign-out fa-1x fa-flip-horizontal" aria-hidden="true"></i></li>
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <script>
-                            $(document).ready(function() {
-                              // Attach click event handler to the logout link
-                              $("#logout-link").on("click", function(event) {
-                                event.preventDefault(); // Prevent default anchor tag behavior
-                      
-                                // Optionally, prompt a confirmation before logging out
-                                if (confirm("Are you sure you want to log out?")) {
-                                  $("#logout-form").submit(); // Submit the hidden logout form
-                                }
-                              });
-                            });
-                          </script>
+                    <li><a href="#" id="logout-link"><i class="fa fa-sign-out fa-1x fa-flip-horizontal" aria-hidden="true"></i></li>
+                       
+
                     {% else %}
                      <li><a href="{% url 'login' %}"><i class="fa fa-user-o"></i> ورود</a></li>
                      <li><a href="{% url 'register' %}"><i class="fa fa-user-o"></i> ثبت‌نام</a></li>

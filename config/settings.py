@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "main.apps.MainConfig",
     
     'django.contrib.humanize',
+   
     
 ]
 
@@ -190,6 +191,4 @@ LOGGING = {
 
 
 
-
-
-
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

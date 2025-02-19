@@ -26,7 +26,12 @@
 
     <!-- Custom stlylesheet -->
     <link type="text/css" rel="stylesheet" href="{% static 'main/css/style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'main/css/custom_css.css' %}">
-
-
+    <link rel="stylesheet" href="{% static 'main/css/custom.css' %}">
+    
+    
+    {% block extra_css %}
+        
+    {% endblock  %}
+    
+    
 </head>
