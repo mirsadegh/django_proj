@@ -192,3 +192,21 @@ LOGGING = {
 
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# شماره پیگیری 23460464789 خرید اینترنت ۳ماهه ۱۲۰۰ گیگابایت تاریخ ۲/۱۲/۱۴۰۳
+

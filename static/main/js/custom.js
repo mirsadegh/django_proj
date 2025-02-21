@@ -15,8 +15,8 @@ $(document).ready(function() {
 
   $(document).ready(function() {
     // Display messages with a fade-out effect
-    $('.alert').fadeIn(500);
-    $('.alert').delay(5000).fadeOut(500);
+    $('.notify').fadeIn(500);
+    $('.notify').delay(5000).fadeOut(500);
 });
 
 

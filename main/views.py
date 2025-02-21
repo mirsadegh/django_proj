@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.db import transaction
 import logging
+from django.core.paginator import Paginator
 
 class Index(View):
     template_name = "main/index.html"
@@ -27,6 +28,12 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
+        comments = Comment.objects.filter(status=True).order_by('-created_at')
+        context['approved_comments_count'] = comments.count()
+        paginator = Paginator(comments, 3)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context['page_obj'] = page_obj
         context['average_rating'] = product.average_rating
         context['total_ratings'] = product.total_ratings
         if self.request.user.is_authenticated:
@@ -81,6 +88,10 @@ class RatingSubmitView(LoginRequiredMixin, View):
                     )
 
                     messages.success(request, "امتیاز شما با موفقیت ثبت شد.")
+
+                page = request.GET.get('page')
+                if page:
+                    return redirect(f"{reverse('product_detail', args=[product_slug])}?page={page}")    
                     
                     
      
@@ -119,6 +130,9 @@ class CommentSubmitView(LoginRequiredMixin, View):
                 text=comment_text
             )
             messages.success(request, "نظر شما با موفقیت ثبت شد.")
+            page = request.GET.get('page')
+            if page:
+                return redirect(f"{reverse('product_detail', args=[product_slug])}?page={page}")
         except Exception as e:
             logging.exception(f"Error saving comment: {e}")
             messages.error(request, f"خطایی در ثبت نظر رخ داد: {e}")

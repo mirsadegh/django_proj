@@ -142,8 +142,6 @@
 }
 
 
-
-
  /* rating  */
 .rating {
     direction: rtl;
@@ -218,4 +216,38 @@
 
 /* Notification styling */
 
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+}
 
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+
+.stars input[type="radio"] {
+    display: none; /* مخفی کردن رادیوها */
+}
+
+.stars label {
+    font-size: 24px; /* اندازه ستاره‌ها */
+    color: #ccc; /* رنگ پیش‌فرض */
+    cursor: pointer; /* نشانگر موس */
+}
+
+.stars input[type="radio"]:checked ~ label {
+    color: #f39c12; /* رنگ ستاره‌های انتخاب شده */
+}
+
+
+.stars label:hover,
+.stars label:hover ~ label {
+    color: #f39c12; /* رنگ ستاره‌ها هنگام هاور */
+}

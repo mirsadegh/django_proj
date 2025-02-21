@@ -1,4 +1,4 @@
-
+{% load custom_filters %}
 <div class="section">
     <!-- container -->
     <div class="container">
@@ -35,7 +35,8 @@
                                     <div class="product-body">
                                         <p class="product-category">{{ product.category.name }}</p>
                                         <h3 class="product-name"><a href="#">{{ product.title }}</a></h3>
-                                        <h4 class="product-price">{{ product.price }}T <del class="product-old-price">{{ product.price }}T</del></h4>
+                                        <h4 class="product-price">{{ product.price|persian_numbers }} تومان 
+                                            <del class="product-old-price">{{ product.price|persian_numbers }} تومان</del></h4>
                                         <div class="product-rating">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>
