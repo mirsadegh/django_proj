@@ -1,0 +1,56 @@
+.add-to-wishlist {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+}
+
+.add-to-wishlist i {
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.add-to-wishlist.active i {
+    color: #E74C3C;  /* red color when active */
+}
+
+.add-to-wishlist .tooltipp {
+    position: absolute;
+    bottom: -25px;
+    right: 0;
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Base state */
+.add-to-wishlist i {
+    color: #666;  /* Default color */
+    transition: all 0.3s ease;
+}
+
+/* Active state - make these rules more specific */
+.add-to-wishlist.active i.fa-heart,
+.add-to-wishlist i.fa-heart {
+    color: #E74C3C !important;  /* Red color with higher specificity */
+}
+
+/* Hover state */
+.add-to-wishlist:hover i {
+    opacity: 0.8;
+}
+
+
+.add-to-wishlist i {
+    color: #666;
+}
+
+.add-to-wishlist i.text-red {
+    color: #E74C3C;
+}

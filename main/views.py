@@ -9,6 +9,10 @@ from django.contrib import messages
 from django.db import transaction
 import logging
 from django.core.paginator import Paginator
+from interests.models import Interest
+from django.db.models import Prefetch
+
+
 
 class Index(View):
     template_name = "main/index.html"
@@ -16,7 +20,24 @@ class Index(View):
     def get(self, request, *args, **kwargs):
         products = Product.objects.filter(available=True)
         context = {'products': products}
+        if self.request.user.is_authenticated:
+            products = products.prefetch_related(
+                Prefetch(
+                    'interests',
+                    queryset=Interest.objects.filter(user=request.user),
+                    to_attr='user_interests'
+                )
+            )
+            
+            # Create a dictionary of product interests for efficient lookup
+            context['product_interests'] = {
+                product.id: bool(product.user_interests) 
+                for product in products
+            }
+
         return render(request, self.template_name, context=context)
+    
+        
 
 
 class ProductDetailView(DetailView):
@@ -41,6 +62,7 @@ class ProductDetailView(DetailView):
                 user=self.request.user,
                 product=self.object
             ).first()
+            
             context['user_rating'] = user_rating
         return context  # URL parameter name
 

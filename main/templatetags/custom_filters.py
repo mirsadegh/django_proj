@@ -45,3 +45,7 @@ def persian_numbers(number):
         return "۰"
 
 
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

@@ -44,11 +44,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     'widget_tweaks',
+    'django.contrib.humanize',
 
     "accounts.apps.AccountsConfig",
     "main.apps.MainConfig",
+    "interests.apps.InterestsConfig",
     
-    'django.contrib.humanize',
+    
    
     
 ]
@@ -190,7 +192,7 @@ LOGGING = {
 }
 
 
-
+# for store notification
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 

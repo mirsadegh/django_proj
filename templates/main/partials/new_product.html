@@ -45,7 +45,26 @@
                                             <i class="fa fa-star"></i>
                                         </div>
                                         <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">افزودن به علاقه مندی</span></button>
+                                            
+                                            {% if request.user.is_authenticated %}
+                                                <button
+                                                    class="add-to-wishlist {% if product_interests|get_item:product.id %}active{% endif %}"
+                                                    data-product-id="{{ product.id }}"
+                                                    data-url="{% url 'interests:toggle_interest' product.id %}"
+                                                    tabindex="0"
+                                                >
+                                                    <i class="fa {% if product_interests|get_item:product.id %}fa-heart text-red{% else %}fa-heart-o{% endif %}"></i>
+                                                    <span class="tooltipp">
+                                                        {% if product_interests|get_item:product.id %}
+                                                            حذف از علاقه مندی
+                                                        {% else %}
+                                                            افزودن به علاقه مندی
+                                                        {% endif %}
+                                                    </span>
+                                                </button>
+                                            {% endif %}
+                                                
+                                            
                                             <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">مقایسه</span></button>
                                             <button class="quick-view">
                                                 <a href="{% url 'product_detail' product.slug %}"><i class="fa fa-eye"></i></a>
