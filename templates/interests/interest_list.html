@@ -1,73 +1,79 @@
 {% extends "main/base.html" %}
 
-{% block title %}
-    لیست علاقمندی
-{% endblock  %}
-    
+{% block title %}لیست علاقمندی{% endblock %}
+
 {% block content %}
-<div class="container">
-    <h1>علاقه‌مندی‌های من</h1>
-    <p>تعداد علاقه‌مندی‌ها: {{ total_interests }}</p>
-    
-    <div class="interest-list">
-        {% for interest in interests %}
-        <div class="interest-item" id="interest-{{ interest.id }}">
-            <div class="product-info">
-                <h3>{{ interest.product.name }}</h3>
-                <p>تاریخ اضافه‌شدن: {{ interest.created_at|date:"Y-m-d H:i" }}</p>
-            </div>
-            <div class="actions">
-                <a href="{% url 'products:detail' interest.product.id %}" 
-                   class="btn btn-primary">
-                    مشاهده محصول
-                </a>
-                <form action="{% url 'interests:interest_delete' interest.id %}" 
-                      method="post" 
-                      class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">
-                        حذف علاقه‌مندی
-                    </button>
-                </form>
+<div class="container py-3">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="header-wrapper mb-4">
+                <h1 class="h3 text-center mb-4 pt-3">
+                    <i class="fa fa-heart text-danger ml-2"></i> <!-- Changed to fa -->
+                    علاقه‌مندی‌های من
+                </h1>
+                <div class="alert alert-info text-center mb-4 py-3">
+                    تعداد موارد ذخیره شده: <strong>{{ total_interests }}</strong>
+                </div>
             </div>
         </div>
-        {% empty %}
-        <p>شما هنوز هیچ محصولی را به علاقه‌مندی‌های خود اضافه نکرده‌اید.</p>
-        {% endfor %}
+    </div>
+
+    <!-- Items List -->
+    <div class="row">
+        <div class="col-12">
+            {% for interest in interests %}
+            <div class="card mb-3">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <!-- Product Info -->
+                        <div class="col-md-8 mb-3 mb-md-0">
+                            <h4 class="card-title mb-3">{{ interest.product.title }}</h4>
+                            <p class="text-muted small mb-0">
+                                <i class="fa fa-clock-o ml-2"></i> <!-- Changed to fa-clock-o -->
+                                تاریخ اضافه‌شدن: {{ interest.created_at|date:"Y-m-d H:i" }}
+                            </p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="col-md-4 text-left">
+                            <div class="d-flex flex-column gap-3">
+                                <a href="{% url 'product_detail' interest.product.slug %}" 
+                                   class="btn btn-primary btn-block py-2">
+                                    <i class="fa fa-eye ml-2"></i> <!-- Changed to fa -->
+                                    مشاهده محصول
+                                </a>
+                                <form method="post" 
+                                      action="{% url 'interests:interest_delete' interest.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-block py-2">
+                                        <i class="fa fa-trash ml-2"></i> <!-- Changed to fa-trash -->
+                                        حذف
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fa fa-heart-o fa-4x text-secondary"></i> <!-- Changed to fa-heart-o -->
+                </div>
+                <h4 class="text-muted mb-4">هنوز موردی اضافه نکرده‌اید!</h4>
+                <a href="{% url 'product_list' %}" class="btn btn-primary px-5">
+                    <i class="fa fa-shopping-cart ml-2"></i> <!-- Changed icon -->
+                    بازگشت به فروشگاه
+                </a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
 <style>
-    .container {
-        margin-top: 20px;
-        font-family: 'Arial', sans-serif;
-        color: #333;
-    }
-    .interest-list {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-    .interest-item {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 15px;
-        background-color: #f9f9f9;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s;
-    }
-    .interest-item:hover {
-        transform: translateY(-2px);
-    }
-    .product-info h3 {
-        margin: 0;
-        font-size: 1.2em;
-    }
-    .actions {
-        margin-top: 10px;
-    }
-    .btn {
-        margin-right: 5px;
-    }
+   
 </style>
 {% endblock %}

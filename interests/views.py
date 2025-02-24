@@ -64,12 +64,11 @@ class ToggleInterestView(LoginRequiredMixin, View):
             
             return JsonResponse(data)
         except Exception as e:
-            print(f"Error in ToggleInterestView: {str(e)}")  # For debugging
             return JsonResponse({'error': str(e)}, status=400)
 
 class InterestDeleteView(LoginRequiredMixin, DeleteView):
     model = Interest
-    success_url = reverse_lazy('interest_list')
+    success_url = reverse_lazy('interests:interest_list')
     
     def get_queryset(self):
         # Ensure users can only delete their own interests

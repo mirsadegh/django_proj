@@ -13,7 +13,11 @@ class Interest(models.Model):
     
     class Meta:
         unique_together = ['product', 'user']  # Prevent duplicate interests
+        verbose_name = "علاقمند"
+        verbose_name_plural = "علاقمندی ها"
+        
     
     def __str__(self):
         return f"{self.user.name}'s interest in {self.product.title}"
     
+

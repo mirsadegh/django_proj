@@ -61,10 +61,11 @@
                     <div class="header-ctn">
                         <!-- Wishlist -->
                         <div>
-                            <a href="#">
+                            <a href="{% url 'interests:interest_list' %}">
                                 <i class="fa fa-heart-o"></i>
                                 <span>علاقه مندی</span>
-                                <div class="qty">2</div>
+                                
+                                <div class="qty">{{ total_interests|default:"0" }}</div>
                             </a>
                         </div>
                         <!-- /Wishlist -->

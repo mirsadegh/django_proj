@@ -14,6 +14,7 @@ urlpatterns = [
     
     path('product/<int:product_id>/toggle-interest/',
          ToggleInterestView.as_view(),name='toggle_interest'),
+         
     path('interest/<int:pk>/delete/',
           InterestDeleteView.as_view(), name='interest_delete'),
 ]
