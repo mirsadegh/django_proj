@@ -960,7 +960,7 @@ textarea.input {
 }
 
 .product .product-body .product-rating:after {
-  content: "";
+  /* content: ""; */
   position: absolute;
   top: 50%;
   left: 0;

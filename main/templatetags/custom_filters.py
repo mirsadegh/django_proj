@@ -1,5 +1,5 @@
 from django import template
-
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -49,3 +49,24 @@ def persian_numbers(number):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def star_rating(rating):
+    try:
+        rating = float(rating)
+    except (ValueError, TypeError):
+        rating = 0
+
+    full_stars = int(rating)  # تعداد ستاره‌های پر
+    half_star = (rating - full_stars) >= 0.5  # وجود نیمه‌ستاره
+    empty_stars = 5 - full_stars - (1 if half_star else 0)  # تعداد ستاره‌های خالی
+
+    stars_html = ''
+    stars_html += '<i class="fa fa-star"></i>' * full_stars
+    if half_star:
+        stars_html += '<i class="fa fa-star half-star "></i>'
+    stars_html += '<i class="fa fa-star-o"></i>' * empty_stars
+
+    return mark_safe(stars_html)
+

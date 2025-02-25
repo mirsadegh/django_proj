@@ -21,14 +21,14 @@
                         <!-- Displaying the Average Rating -->
                         <div class="product-rating">
                             <div class="rating-summary">
-                                <strong>میانگین امتیاز: {{ product.average_rating|floatformat:1 }} از 5</strong>
+                                <strong>میانگین امتیاز: {{ product.average_rating|star_rating }}</strong>
                                 <p>تعداد امتیازها: {{ product.total_ratings }}</p>
                             </div>
                             
                             <!-- Check if user has already rated -->
                             {% if user.is_authenticated %}
                                 {% if user_rating %}
-                                    <p>امتیاز شما: {{ user_rating.rating }}</p>
+                                    <p>امتیاز شما: {{ user_rating.rating|star_rating }}</p>
                                 {% else %}
                                     <p>شما هنوز به این محصول امتیاز نداده‌اید.</p>
                                 {% endif %}

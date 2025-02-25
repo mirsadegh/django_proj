@@ -251,3 +251,47 @@
 .stars label:hover ~ label {
     color: #f39c12; /* رنگ ستاره‌ها هنگام هاور */
 }
+
+/* ستاره‌های پر و نیمه پر به رنگ قرمز */
+.star-filled {
+    color: #ef233c; /* رنگ قرمز */
+}
+
+/* ستاره‌های خالی (اختیاری - می‌توانید رنگ ستاره‌های خالی را هم تغییر دهید) */
+.fa-star-o {
+    color: #e0e0e0; /* رنگ خاکستری روشن */
+}
+
+
+/* استایل برای ستاره‌های پر و خالی */
+.fa-star, .fa-star-o {
+    font-size: 20px;
+    color: #ccc; /* رنگ ستاره خالی */
+}
+
+.fa-star {
+    color: #ef233c; /* رنگ ستاره پر */
+}
+
+/* استایل برای نیم‌ستاره */
+.half-star {
+    position: relative;
+    display: inline-block;
+    font-size: 20px; /* اندازه ثابت */
+    color: #ccc; /* رنگ پس‌زمینه (ستاره خالی) */
+    width: 20px; /* عرض مشخص برای اطمینان از نمایش */
+    height: 20px; /* ارتفاع مشخص */
+    overflow: hidden; /* جلوگیری از سرریز */
+}
+
+.half-star::before {
+    content: "\f005"; /* کد یونیکد ستاره پر در FontAwesome */
+    font-family: FontAwesome; /* مطمئن شوید فونت لود شده */
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 50%; /* فقط نیمی از ستاره پر شود */
+    height: 100%;
+    color: #ef233c; /* رنگ ستاره پر */
+    overflow: hidden; /* نیمی از آیکون نمایش داده شود */
+}
