@@ -1,0 +1,22 @@
+{% load static %}
+
+<div class="dropdown">
+    <a id="cart-toggle" class="dropdown-toggle cursor-pointer" data-toggle="dropdown" aria-expanded="true">
+        <span id="cart-item-count" class="badge badge-danger">0</span>  <!-- تعداد محصولات -->
+        <i class="fa fa-shopping-cart"></i>
+        <span>سبد خرید</span>
+    </a>
+    <div id="cart-dropdown" class="cart-dropdown right">
+        <div id="cart-list" class="cart-list">
+            <p class="text-center text-muted">در حال بارگذاری...</p>
+        </div>
+        <div class="cart-summary">
+            <small id="cart-items-count">0 محصول انتخاب شده</small>
+            <h5>جمع کل: <span id="cart-total">0 تومان</span></h5>
+        </div>
+        <div class="cart-btns">
+            <a href="{% url 'cart:shopping_cart' %}">سبد خرید</a>
+            <a href="#">پرداخت <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>

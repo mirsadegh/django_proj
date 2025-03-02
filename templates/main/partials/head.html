@@ -28,7 +28,8 @@
     <link type="text/css" rel="stylesheet" href="{% static 'main/css/style.css' %}"/>
     <link rel="stylesheet" href="{% static 'main/css/custom.css' %}">
     <link rel="stylesheet" href="{% static 'interests/css/custom.css' %}">
-    
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
     
     {% block extra_css %}
         

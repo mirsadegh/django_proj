@@ -49,10 +49,10 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "main.apps.MainConfig",
     "interests.apps.InterestsConfig",
+    "store.apps.StoreConfig",
+    "cart.apps.CartConfig",
     
-    
-   
-    
+ 
 ]
 
 MIDDLEWARE = [

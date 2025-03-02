@@ -295,3 +295,62 @@
     color: #ef233c; /* رنگ ستاره پر */
     overflow: hidden; /* نیمی از آیکون نمایش داده شود */
 }
+
+
+
+
+.cart-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: opacity 0.5s ease-in-out;
+}
+
+
+
+  /* جلوگیری از بیرون زدن تصویر */
+  .product-img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* جلوگیری از بزرگ شدن فیلد تعداد */
+.quantity-input {
+    max-width: 60px;
+    text-align: center;
+}
+
+/* افکت حذف */
+.delete-item:hover {
+    color: #dc3545;
+    transform: scale(1.2);
+    transition: all 0.3s ease-in-out;
+}
+
+/* استایل دکمه‌های افزایش و کاهش */
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* رنگ جدید برای دکمه کد تخفیف */
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+
+
+
+
+

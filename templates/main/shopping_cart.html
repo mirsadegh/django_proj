@@ -1,0 +1,70 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+     سبد خرید
+{% endblock  %}
+    
+
+{% block content %}
+<section class="h-100 bg-light py-5">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-10">
+
+                <!-- هدر سبد خرید -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold text-primary">🛒 سبد خرید شما</h3>
+                </div>
+
+                {% for item in cart %}
+                <div class="card shadow-sm border-0 rounded-3 mb-4">
+                    <div class="card-body">
+                        <div class="row align-items-center text-center text-md-start">
+                            <div class="col-12 col-sm-3 col-md-2 text-center">
+                                <img src="{{ item.product.image.url }}" class="img-fluid rounded-3 border product-img" alt="{{ item.product.name }}">
+                            </div>
+                            <div class="col-12 col-sm-4 col-md-3">
+                                <p class="fw-bold mb-1">{{ item.product.name }}</p>
+                                <p class="text-muted small mb-0">قیمت: {{ item.price }} تومان</p>
+                            </div>
+                            <div class="col-12 col-sm-3 col-md-3 d-flex justify-content-center align-items-center">
+                                <button class="btn btn-outline-secondary btn-sm px-2 update-cart" data-product-id="{{ item.product.id }}" data-action="decrease">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <input type="number" name="quantity" value="{{ item.quantity }}" class="form-control text-center mx-2 quantity-input" disabled />
+                                <button class="btn btn-outline-secondary btn-sm px-2 update-cart" data-product-id="{{ item.product.id }}" data-action="increase">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="col-12 col-sm-4 col-md-2">
+                                <h5 class="text-success fw-bold mb-0 total-price">{{ item.total_price }} تومان</h5>
+                            </div>
+                            <div class="col-12 col-sm-1 col-md-1 text-end">
+                                <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="text-danger delete-item">
+                                    <i class="fa fa-trash fa-lg"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center text-muted">سبد خرید شما خالی است.</p>
+                {% endfor %}
+
+                <!-- نمایش مبلغ کل سبد خرید -->
+                <div class="card border-0 shadow my-3">
+                    <div class="card-body text-center p-4">
+                        <h4 class="fw-bold">مبلغ کل: <span id="total-cart-price">{{ cart.get_total_price }}</span> تومان</h4>
+                        <button type="button" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
+                            ادامه فرایند خرید 🛍️
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock  %}
+    
+
