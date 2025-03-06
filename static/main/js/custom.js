@@ -67,6 +67,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 3000);
 }
 
+
+
     function updateCartTotal(cartTotal) {
         let cartTotalElement = document.getElementById("cart-total");
         if (cartTotalElement) {
@@ -77,81 +79,51 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-document.addEventListener("DOMContentLoaded", function() {
-	let updateButtons = document.querySelectorAll(".update-cart");
 
-	updateButtons.forEach(button => {
-		button.addEventListener("click", function() {
-			let productId = this.getAttribute("data-product-id");
-			let action = this.getAttribute("data-action");
+document.addEventListener("DOMContentLoaded", function () {
+    let cartToggle = document.getElementById("cart-toggle");
+	updateCartDropdown(); // هنگام لود صفحه، مقدار سبد خرید را تنظیم کند
 
-			fetch(`/cart/update/${productId}/`, {
-				method: "POST",
-				headers: {
-					"X-CSRFToken": getCSRFToken(),
-					"Content-Type": "application/x-www-form-urlencoded"
-				},
-				body: `action=${action}`
-			})
-			.then(response => response.json())
-			.then(data => {
-				let quantityInput = this.parentElement.querySelector(".quantity-input");
-				let totalPriceElement = this.parentElement.parentElement.querySelector(".total-price");
-				let totalCartPriceElement = document.getElementById("total-cart-price");
-				let productRow = this.closest(".card"); // کل کارت محصول
+    cartToggle.addEventListener("click", function () {
+        updateCartDropdown(); // هنگام کلیک روی سبد خرید، مقدار آن به‌روزرسانی شود
+    });
 
-				if (data.is_removed) {
-					productRow.remove(); // حذف محصول از صفحه
-				} else {
-					quantityInput.value = data.quantity;
-					totalPriceElement.innerText = `${(data.quantity * parseFloat(data.price)).toFixed()} تومان`;
-				}
+    let updateButtons = document.querySelectorAll(".update-cart");
 
-				totalCartPriceElement.innerText = `${data.total_price} تومان`;
+    updateButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            let productId = this.getAttribute("data-product-id");
+            let action = this.getAttribute("data-action");
 
-			})
-			.catch(error => console.error("Error:", error));
-		});
-	});
+            fetch(`/cart/update/${productId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCSRFToken(),
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `action=${action}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                let quantityInput = this.parentElement.querySelector(".quantity-input");
+                let totalPriceElement = this.parentElement.parentElement.querySelector(".total-price");
+                let totalCartPriceElement = document.getElementById("total-cart-price");
+                let productRow = this.closest(".card"); // کل کارت محصول
 
-	
-});
+                if (data.is_removed) {
+                    productRow.remove(); // حذف محصول از صفحه
+                } else {
+                    quantityInput.value = data.quantity; // مقدار باید عددی بماند
+                    totalPriceElement.innerText = `${convertToPersianNumbers((data.quantity * parseFloat(data.price)).toFixed())} تومان`;
+                }
+                totalCartPriceElement.innerText = `${convertToPersianNumbers(data.total_price)} تومان`;
 
-
-
-
-function populateCartDropdownUI(data) {
-    let cartList = document.getElementById("cart-list");
-    let cartTotal = document.getElementById("cart-total");
-    let cartItemCount = document.getElementById("cart-item-count");
-    let cartItemsCountText = document.getElementById("cart-items-count");
-
-    cartList.innerHTML = "";
-
-    if (data.items.length === 0) {
-        cartList.innerHTML = "<p class='text-center text-muted'>سبد خرید شما خالی است.</p>";
-    } else {
-        data.items.forEach(item => {
-            let itemElement = document.createElement("div");
-            itemElement.className = "product-widget d-flex align-items-center";
-            itemElement.innerHTML = `
-                <div class="product-img">
-                    <img src="${item.image}" width="50" height="50" alt="${item.name}">
-                </div>
-                <div class="product-body text-right ms-3">
-                    <h3 class="product-name"><a href="#">${item.name}</a></h3>
-                    <h4 class="product-price"><span class="qty">${item.quantity}x</span> ${item.total_price} تومان</h4>
-                </div>
-                <button class="delete" onclick="removeFromCart(${item.id})"><i class="fa fa-close"></i></button>
-            `;
-            cartList.appendChild(itemElement);
+                updateCartDropdown(); // ✅ سبد خرید را به‌روزرسانی کنیم
+            })
+            .catch(error => console.error("Error:", error));
         });
-
-        cartTotal.innerText = `${data.total_price} تومان`;
-        cartItemCount.innerText = data.items.length;
-        cartItemsCountText.innerText = `${data.items.length} محصول انتخاب شده`;
-    }
-}
+    });
+});
 
 
 
@@ -162,12 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	updateCartDropdown();
 
     cartToggle.addEventListener("click", function () {
-        fetch("/cart/dropdown/")
-            .then(response => response.json())
-            .then(data => {
-                populateCartDropdownUI(data);
-            })
-            .catch(error => console.error("Error loading cart:", error));
+        updateCartDropdown()
     });
 });
 
@@ -188,6 +155,37 @@ function updateCartDropdown() {
 
 
 
+function populateCartDropdownUI(data) {
+    let cartList = document.getElementById("cart-list");
+    let cartItemCount = document.getElementById("cart-item-count");
+    let cartItemsCount = document.getElementById("cart-items-count");
+    let cartTotal = document.getElementById("cart-total");
+
+    if (data.items.length === 0) {
+        cartList.innerHTML = `<p class="text-center text-muted">سبد خرید شما خالی است</p>`;
+    } else {
+        cartList.innerHTML = "";
+        data.items.forEach(item => {
+            cartList.innerHTML += `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-img"> <!-- 👈 کلاس جدید -->
+                    <div>
+                        <p>${item.name}</p>
+                        <small>${convertToPersianNumbers(item.quantity)} × ${convertToPersianNumbers(item.price)} تومان</small>
+                    </div>
+                </div>`;
+        });
+    }
+
+    cartItemCount.innerText = convertToPersianNumbers(data.items.length);
+    cartItemsCount.innerText = `${convertToPersianNumbers(data.items.length)} محصول انتخاب شده`;
+    cartTotal.innerText = `${convertToPersianNumbers(data.total_price)} تومان`;
+}
+
+
+function convertToPersianNumbers(number) {
+    return Number(number).toLocaleString("fa-IR"); // تبدیل عدد به فارسی و سه‌رقمی کردن
+}
 
 
 

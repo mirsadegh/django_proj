@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-
+{% load custom_filters %}
 {% block title %}
      سبد خرید
 {% endblock  %}
@@ -25,7 +25,7 @@
                             </div>
                             <div class="col-12 col-sm-4 col-md-3">
                                 <p class="fw-bold mb-1">{{ item.product.name }}</p>
-                                <p class="text-muted small mb-0">قیمت: {{ item.price }} تومان</p>
+                                <p class="text-muted small mb-0">قیمت: {{ item.price|persian_numbers }} تومان</p>
                             </div>
                             <div class="col-12 col-sm-3 col-md-3 d-flex justify-content-center align-items-center">
                                 <button class="btn btn-outline-secondary btn-sm px-2 update-cart" data-product-id="{{ item.product.id }}" data-action="decrease">
@@ -37,7 +37,7 @@
                                 </button>
                             </div>
                             <div class="col-12 col-sm-4 col-md-2">
-                                <h5 class="text-success fw-bold mb-0 total-price">{{ item.total_price }} تومان</h5>
+                                <h5 class="text-success fw-bold mb-0 total-price">{{ item.total_price|persian_numbers }} تومان</h5>
                             </div>
                             <div class="col-12 col-sm-1 col-md-1 text-end">
                                 <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="text-danger delete-item">
@@ -54,7 +54,7 @@
                 <!-- نمایش مبلغ کل سبد خرید -->
                 <div class="card border-0 shadow my-3">
                     <div class="card-body text-center p-4">
-                        <h4 class="fw-bold">مبلغ کل: <span id="total-cart-price">{{ cart.get_total_price }}</span> تومان</h4>
+                        <h4 class="fw-bold">مبلغ کل: <span id="total-cart-price">{{ cart.get_total_price|persian_numbers }}</span> تومان</h4>
                         <button type="button" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
                             ادامه فرایند خرید 🛍️
                         </button>

@@ -350,6 +350,23 @@
 }
 
 
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item-img {
+    width: 50px;  /* عرض عکس */
+    height: 50px; /* ارتفاع عکس */
+    object-fit: cover; /* جلوگیری از کشیدگی */
+    border-radius: 5px; /* گوشه‌های گرد */
+    margin-right: 10px; /* فاصله از متن */
+}
+
+
+
 
 
 

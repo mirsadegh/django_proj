@@ -8,10 +8,8 @@ User = get_user_model()
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name="دسته‌بندی")
     
-
     def __str__(self):
         return self.name
-
 
     class Meta: 
         verbose_name = 'دسته بندی'
@@ -94,9 +92,6 @@ class Mobile(models.Model):
     class Meta: 
         verbose_name = 'گوشی'
         verbose_name_plural = 'گوشیها'
-
-
-
 
 
 
