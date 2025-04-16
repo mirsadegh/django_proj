@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils.translation import gettext_lazy as _
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -53,3 +54,28 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile', verbose_name=_("کاربر"))
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name=_("تصویر پروفایل"))
+    bio = models.TextField(max_length=500, blank=True, verbose_name=_("بیوگرافی"))
+    location = models.CharField(max_length=100, blank=True, verbose_name=_("موقعیت مکانی"))
+    website = models.URLField(max_length=200, blank=True, verbose_name=_("وبسایت"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("تاریخ ایجاد"))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_("تاریخ بروزرسانی"))
+
+    class Meta:
+        verbose_name = _("پروفایل")
+        verbose_name_plural = _("پروفایل‌ها")
+
+    def __str__(self):
+        return f"{self.user.email}'s profile"
+
+
+
+
+
+
+

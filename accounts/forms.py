@@ -1,16 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser
+from .models import CustomUser, Profile
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
-
-
-from django import forms
-from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
+
 
 class EmailAuthenticationForm(forms.Form):
     email = forms.EmailField(
@@ -83,7 +79,15 @@ class CustomUserChangeForm(UserChangeForm):
 
 
 
-
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar', 'bio', 'location', 'website']
+        
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['name', 'email', 'phone_number', 'date_of_birth']
 
 
 

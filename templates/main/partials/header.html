@@ -9,7 +9,7 @@
                 <ul class="header-links pull-left">
                     {% if request.user.is_authenticated %}
                     
-                    <li><a href="#"><i class="fa fa-user-o"></i> {{ request.user.name|default:request.user.email  }}</a></li>
+                    <li><a href="{% url 'profile' %}"><i class="fa fa-user-o"></i> {{ request.user.name|default:request.user.email  }}</a></li>
                     <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
                         
                           {% csrf_token %} 

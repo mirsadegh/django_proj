@@ -1,0 +1,43 @@
+{% extends 'accounts/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>ویرایش پروفایل</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label>نام</label>
+            {{ user_form.name|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label>ایمیل</label>
+            {{ user_form.email|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label>تصویر پروفایل</label>
+            {{ profile_form.avatar|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label>بیوگرافی</label>
+            {{ profile_form.bio|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label>موقعیت مکانی</label>
+            {{ profile_form.location|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label>وبسایت</label>
+            {{ profile_form.website|add_class:"form-control" }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+    </form>
+</div>
+{% endblock %}

@@ -7,6 +7,8 @@ from .views import (
     ResendActivationEmailView,
     CustomPasswordResetDoneView,
     CustomPasswordResetView,
+    ProfileDetailView, 
+    ProfileUpdateView,
 )
 
 
@@ -30,5 +32,7 @@ urlpatterns = [
              template_name='accounts/password_reset_complete.html'
          ),
          name='password_reset_complete'),
+    path('profile/', ProfileDetailView.as_view(), name='profile'),
+    path('profile/edit/', ProfileUpdateView.as_view(), name='profile_edit'),
 
 ]

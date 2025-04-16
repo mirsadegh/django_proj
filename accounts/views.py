@@ -7,7 +7,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Profile
 from .tokens import account_activation_token
 from .forms import EmailAuthenticationForm
 from django.urls import reverse
@@ -19,6 +19,15 @@ from django.contrib.auth import get_user_model
 
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView, UpdateView
+
+from .forms import ProfileUpdateForm, UserUpdateForm
+
+
+
+
 
 
 class EmailLoginView(AnonymousUserRequiredMixin, View):
@@ -156,4 +165,52 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
         context['email'] = email
         context['email_exists'] = User.objects.filter(email=email).exists()
         return context
+
+
+
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = 'accounts/profile_detail.html'
+    context_object_name = 'profile'
+
+    def get_object(self):
+        return self.request.user.profile
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = ProfileUpdateForm  
+    template_name = 'accounts/profile_update.html'
+    success_url = reverse_lazy('profile')
+    
+    def get_object(self, queryset=None):  # Add this method
+        return self.request.user.profile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['user_form'] = UserUpdateForm(self.request.POST, instance=self.request.user)
+            context['profile_form'] = ProfileUpdateForm(self.request.POST, self.request.FILES, instance=self.request.user.profile)
+        else:
+            context['user_form'] = UserUpdateForm(instance=self.request.user)
+            context['profile_form'] = ProfileUpdateForm(instance=self.request.user.profile)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        user_form = context['user_form']
+        profile_form = context['profile_form']
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(self.request, 'پروفایل شما با موفقیت بروزرسانی شد')
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+
+
+
+
 
