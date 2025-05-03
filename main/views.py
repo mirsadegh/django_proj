@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product,Rating,Comment
+from .models import Product,Rating,Comment, Category
 from django.views.generic import DetailView
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from django.urls import reverse
 from django.contrib import messages
 from django.db import transaction
@@ -163,5 +163,61 @@ class CommentSubmitView(LoginRequiredMixin, View):
 
     def get(self, request, product_slug):
         return redirect('product_detail', slug=product_slug)
+
+
+class SearchView(View):
+    template_name = "main/search.html"
+    
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q', '')
+        category_id = request.GET.get('category', '')
+        
+        products = Product.objects.filter(available=True)
+        
+        if query:
+            products = products.filter(
+                Q(title__icontains=query) | 
+                Q(description__icontains=query)
+            )
+        
+        if category_id:
+            products = products.filter(category_id=category_id)
+        
+        # Paginate results
+        paginator = Paginator(products, 12)  # Show 12 products per page
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        # Get all categories for the filter dropdown
+        categories = Category.objects.all()
+        
+        # Handle user interests for authenticated users
+        if request.user.is_authenticated:
+            products = products.prefetch_related(
+                Prefetch(
+                    'interests',
+                    queryset=Interest.objects.filter(user=request.user),
+                    to_attr='user_interests'
+                )
+            )
+            
+            # Create a dictionary of product interests for efficient lookup
+            product_interests = {
+                product.id: bool(product.user_interests) 
+                for product in products
+            }
+        else:
+            product_interests = {}
+            
+        context = {
+            'products': page_obj,
+            'query': query,
+            'selected_category': category_id,
+            'categories': categories,
+            'product_interests': product_interests,
+            'total_results': paginator.count
+        }
+        
+        return render(request, self.template_name, context=context)
 
 

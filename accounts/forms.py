@@ -72,6 +72,7 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ('email',)
 
+
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
@@ -83,6 +84,7 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['avatar', 'bio', 'location', 'website']
+  
         
 class UserUpdateForm(forms.ModelForm):
     class Meta:

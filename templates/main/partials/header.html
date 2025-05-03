@@ -47,10 +47,9 @@
                 <!-- SEARCH BAR -->
                 <div class="col-md-6">
                     <div class="header-search text-right">
-                        <form>
-                            
-                            <input class="input" placeholder="جستجو">
-                            <button class="search-btn">جستجو</button>
+                        <form action="{% url 'search' %}" method="GET">
+                            <input class="input" name="q" placeholder="جستجو" required>
+                            <button type="submit" class="search-btn">جستجو</button>
                         </form>
                     </div>
                 </div>

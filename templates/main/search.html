@@ -1,0 +1,189 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}
+<title>جستجوی محصولات</title>
+{% endblock %}
+
+{% block extra_css %}
+<link type="text/css" rel="stylesheet" href="{% static 'main/css/search.css' %}"/>
+{% endblock %}
+
+{% block content %}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="search-page-header mb-4">
+                    <h2 class="text-center mb-4">جستجوی محصولات</h2>
+                    
+                    <!-- Search Form -->
+                    <div class="search-filters-container bg-light p-4 mb-4">
+                        <form method="GET" action="{% url 'search' %}" class="search-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="searchInput">متن جستجو:</label>
+                                        <input type="text" id="searchInput" name="q" class="form-control" 
+                                               placeholder="نام محصول یا توضیحات آن را وارد کنید" 
+                                               value="{{ query }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <label for="categorySelect">دسته‌بندی:</label>
+                                        <select id="categorySelect" name="category" class="form-control">
+                                            <option value="">همه دسته‌بندی‌ها</option>
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}" 
+                                                {% if selected_category == category.id|stringformat:'i' %}selected{% endif %}>
+                                                    {{ category.name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mb-3 d-flex align-items-end h-100">
+                                        <button type="submit" class="btn btn-primary btn-block">جستجو</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Search Results Summary -->
+                    <div class="search-results-summary">
+                        <p>
+                            {% if total_results > 0 %}
+                                <span>{{ total_results }} محصول یافت شد</span>
+                                {% if query %}
+                                    <span> برای "{{ query }}"</span>
+                                {% endif %}
+                            {% else %}
+                                <span>محصولی یافت نشد</span>
+                                {% if query %}
+                                    <span> برای "{{ query }}"</span>
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Search Results -->
+                <div class="row">
+                    {% if products %}
+                        {% for product in products %}
+                            <!-- product -->
+                            <div class="col-md-4 col-xs-6">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                                        <div class="product-label">
+                                            {% if product.price %}
+                                                <span class="sale">فروش ویژه</span>
+                                            {% endif %}
+                                            <span class="new">جدید</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">{{ product.category.name }}</p>
+                                        <h3 class="product-name">
+                                            <a href="{% url 'product_detail' product.slug %}">{{ product.title }}</a>
+                                        </h3>
+                                        <h4 class="product-price">{{ product.price }} تومان</h4>
+                                        <div class="product-rating">
+                                            {% if product.average_rating > 0 %}
+                                                {% for i in "12345" %}
+                                                    {% if forloop.counter <= product.average_rating|floatformat:0|add:"0" %}
+                                                        <i class="fa fa-star"></i>
+                                                    {% elif forloop.counter <= product.average_rating|floatformat:0|add:"0.5" %}
+                                                        <i class="fa fa-star-half-o"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-star-o"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist">
+                                                <a href="#" class="add-to-wishlist-link">
+                                                    {% if product_interests and product.id in product_interests and product_interests|get_item:product.id %}
+                                                        <i class="fa fa-heart interest-icon"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-heart-o interest-icon"></i>
+                                                    {% endif %}
+                                                    <span class="tooltipp">اضافه به علاقه‌مندی‌ها</span>
+                                                </a>
+                                            </button>
+                                            <button class="quick-view">
+                                                <a href="{% url 'product_detail' product.slug %}">
+                                                    <i class="fa fa-eye"></i>
+                                                    <span class="tooltipp">مشاهده محصول</span>
+                                                </a>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <a href="{% url 'cart:add_to_cart' product.id %}" class="add-to-cart-btn">
+                                            <i class="fa fa-shopping-cart"></i> افزودن به سبد خرید
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /product -->
+                            
+                            {% if forloop.counter|divisibleby:3 %}
+                                <div class="clearfix"></div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-md-12">
+                            <div class="alert alert-info text-center">
+                                <h4>محصولی یافت نشد!</h4>
+                                <p>جستجوی خود را تغییر دهید یا فیلترها را حذف کنید.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if products.has_other_pages %}
+                <div class="store-filter clearfix">
+                    <ul class="store-pagination">
+                        {% if products.has_previous %}
+                            <li><a href="?q={{ query }}&category={{ selected_category }}&page={{ products.previous_page_number }}"><i class="fa fa-angle-right"></i></a></li>
+                        {% endif %}
+                        
+                        {% for i in products.paginator.page_range %}
+                            {% if products.number == i %}
+                                <li class="active">{{ i }}</li>
+                            {% else %}
+                                <li><a href="?q={{ query }}&category={{ selected_category }}&page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if products.has_next %}
+                            <li><a href="?q={{ query }}&category={{ selected_category }}&page={{ products.next_page_number }}"><i class="fa fa-angle-left"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+{% endblock %} 

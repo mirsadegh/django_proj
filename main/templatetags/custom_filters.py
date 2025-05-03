@@ -48,7 +48,17 @@ def persian_numbers(number):
 
 @register.filter
 def get_item(dictionary, key):
-    return dictionary.get(key)
+    """
+    Get an item from a dictionary using a key.
+    Usage: {{ my_dict|get_item:my_key }}
+    """
+    if dictionary is None:
+        return None
+    
+    try:
+        return dictionary.get(key)
+    except (KeyError, AttributeError):
+        return None
 
 
 @register.filter

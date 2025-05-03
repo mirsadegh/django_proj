@@ -183,7 +183,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'accounts/profile_update.html'
     success_url = reverse_lazy('profile')
     
-    def get_object(self, queryset=None):  # Add this method
+    def get_object(self):  # Simplified method
         return self.request.user.profile
 
     def get_context_data(self, **kwargs):
