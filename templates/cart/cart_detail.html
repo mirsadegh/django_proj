@@ -1,0 +1,131 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load humanize %} <!-- For number formatting, if you use it -->
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h1 class="mb-4">Your Shopping Cart</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if cart %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col" class="text-center">Image</th>
+                        <th scope="col" class="text-center">Price</th>
+                        <th scope="col" class="text-center">Quantity</th>
+                        <th scope="col" class="text-end">Total</th>
+                        <th scope="col" class="text-center">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>
+                                <a href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a>
+                            </td>
+                            <td class="text-center">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}" style="max-height: 50px; max-width: 50px; object-fit: cover;">
+                                {% else %}
+                                    <img src="{% static 'main/img/product_placeholder.png' %}" alt="No image" style="max-height: 50px; max-width: 50px; object-fit: cover;">
+                                {% endif %}
+                            </td>
+                            <td class="text-center">${{ item.price|floatformat:2|intcomma }}</td>
+                            <td class="text-center">
+                                <!-- Basic quantity display. For updates, you'd need a form per item -->
+                                {{ item.quantity }}
+                                <!-- Example for quantity update form (more complex, for future)
+                                <form action="{% url 'cart:add_to_cart' item.product.id %}" method="post" class="d-inline-flex align-items-center">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm" style="width: 70px;">
+                                    <input type="hidden" name="override_quantity" value="true">
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary ms-1">Update</button>
+                                </form>
+                                -->
+                            </td>
+                            <td class="text-end">${{ item.total_price|floatformat:2|intcomma }}</td>
+                            <td class="text-center">
+                                <form action="{% url 'cart:remove_from_cart' item.product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-danger">&times;</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h4>Apply Coupon</h4>
+                <form action="{% url 'cart:apply_coupon' %}" method="post" class="mb-3">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" name="coupon_code" class="form-control" placeholder="Enter coupon code" value="{{ cart.coupon_code|default:'' }}">
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </div>
+                </form>
+                {% if cart.coupon_code and cart.applied_discount_id %}
+                    <p>
+                        Applied Coupon: <strong>{{ cart.coupon_code }}</strong>
+                        (<a href="{% url 'cart:remove_coupon' %}">Remove</a>)
+                    </p>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Cart Summary</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Subtotal
+                                <span>${{ cart.get_subtotal|floatformat:2|intcomma }}</span>
+                            </li>
+                            {% if cart.discount_amount > 0 %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center text-success">
+                                Discount
+                                {% if applied_discount and applied_discount.name %}
+                                    ({{ applied_discount.name }})
+                                {% elif cart.coupon_code %}
+                                    ({{ cart.coupon_code }})
+                                {% endif %}
+                                <span>-${{ cart.discount_amount|floatformat:2|intcomma }}</span>
+                            </li>
+                            {% endif %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                                Total
+                                <span>${{ cart.get_total_price|floatformat:2|intcomma }}</span>
+                            </li>
+                        </ul>
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="#" class="btn btn-success btn-lg">Proceed to Checkout</a> 
+                            <!-- TODO: Update href to actual checkout URL -->
+                            <a href="{% url 'cart:clear_cart' %}" class="btn btn-outline-danger">Clear Cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Your shopping cart is empty. <a href="{% url 'index' %}" class="alert-link">Continue shopping?</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

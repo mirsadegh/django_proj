@@ -2,22 +2,30 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth import get_user_model
 from django.db.models import Avg, Count
+from django.utils import timezone
+
 User = get_user_model()
 
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True, verbose_name="دسته‌بندی")
-    
+
     def __str__(self):
         return self.name
 
-    class Meta: 
+    class Meta:
         verbose_name = 'دسته بندی'
-        verbose_name_plural = 'دسته‌بندی‌ها'    
+        verbose_name_plural = 'دسته‌بندی‌ها'
 
 
 
 class Product(models.Model):
+    PRODUCT_TYPES = [
+        ('general', 'عمومی'),
+        ('laptop', 'لپ تاپ'),
+        ('mobile', 'گوشی'),
+    ]
+    
     title = models.CharField(max_length=100, verbose_name='عنوان')
     category = models.ForeignKey(
         Category,
@@ -32,11 +40,29 @@ class Product(models.Model):
     available = models.BooleanField(default=True, verbose_name="موجود")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='آخرین بروزرسانی')
+    product_type = models.CharField(
+        max_length=10,
+        choices=PRODUCT_TYPES,
+        default='general',
+        verbose_name='نوع محصول'
+    )
+    
+    # Laptop fields
+    cpu = models.CharField(max_length=100, verbose_name="پردازنده", null=True, blank=True)
+    ram = models.CharField(max_length=50, verbose_name="حافظه رم", null=True, blank=True)
+    storage = models.CharField(max_length=50, verbose_name="حافظه داخلی", null=True, blank=True)
+    screen_size = models.CharField(max_length=50, verbose_name="اندازه صفحه نمایش", null=True, blank=True)
+    
+    # Mobile fields
+    os = models.CharField(max_length=50, verbose_name="سیستم عامل", null=True, blank=True)
+    camera = models.CharField(max_length=50, verbose_name="دوربین", null=True, blank=True)
+    battery = models.CharField(max_length=50, verbose_name="باتری", null=True, blank=True)
+    screen_resolution = models.CharField(max_length=50, verbose_name="رزولوشن صفحه نمایش", null=True, blank=True)
 
     def __str__(self):
         return self.title
-    
-    class Meta: 
+
+    class Meta:
         verbose_name = 'محصول'
         verbose_name_plural = 'محصولات'
 
@@ -45,53 +71,36 @@ class Product(models.Model):
         # Calculate average rating using aggregate
         result = self.ratings.aggregate(Avg('rating'))
         return result['rating__avg'] or 0.0
-    
+
     @property
     def total_ratings(self):
-        return self.ratings.count()    
+        return self.ratings.count()
+        
+    @property
+    def current_price(self):
+        """
+        Get current price considering active automatic discounts
+        """
+        from discounts.models import Discount
+        now = timezone.now()
+        
+        # Find valid automatic discounts for this product
+        discounts = Discount.objects.filter(
+            is_automatic=True,
+            is_active=True,
+            active_from__lte=now,
+            active_until__gte=now,
+        ).filter(
+            models.Q(products=self) | 
+            models.Q(categories=self.category)
+        )
+        
+        # Apply the first valid discount found
+        if discounts.exists():
+            return discounts.first().calculate_discounted_price(self)
+        return self.price
 
 
-
-class Laptop(models.Model):
-    product = models.OneToOneField(
-        Product,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        related_name='laptop_details',
-        verbose_name="محصول مرتبط"
-    )
-    cpu = models.CharField(max_length=100, verbose_name="پردازنده")
-    ram = models.CharField(max_length=50, verbose_name="حافظه رم")
-    storage = models.CharField(max_length=50, verbose_name="حافظه داخلی")
-    screen_size = models.CharField(max_length=50, verbose_name="اندازه صفحه نمایش")
-
-    def __str__(self):
-        return f"Laptop: {self.product.title}"
-    
-    class Meta: 
-        verbose_name = 'لپ تاپ'
-        verbose_name_plural = 'لپتاپ ها'
-
-# مدل موبایل - فیلدهای اختصاصی موبایل
-class Mobile(models.Model):
-    product = models.OneToOneField(
-        Product,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        related_name='mobile_details',
-        verbose_name="محصول مرتبط"
-    )
-    os = models.CharField(max_length=50, verbose_name="سیستم عامل")
-    camera = models.CharField(max_length=50, verbose_name="دوربین")
-    battery = models.CharField(max_length=50, verbose_name="باتری")
-    screen_resolution = models.CharField(max_length=50, verbose_name="رزولوشن صفحه نمایش")
-
-    def __str__(self):
-        return f"Mobile: {self.product.title}"
-    
-    class Meta: 
-        verbose_name = 'گوشی'
-        verbose_name_plural = 'گوشیها'
 
 
 
@@ -111,7 +120,7 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.user.name}'s {self.rating}-star rating"
-    
+
 
 
 class Comment(models.Model):
@@ -127,4 +136,15 @@ class Comment(models.Model):
         verbose_name_plural = "نظرات"
 
     def __str__(self):
-        return f"Comment by {self.user.name} on {self.product.title}"    
+        return f"Comment by {self.user.name} on {self.product.title}"
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='gallery_images')
+    image = models.ImageField(upload_to='product_gallery_images', verbose_name='تصویر گالری محصول')
+
+    class Meta:
+        verbose_name = 'تصویر گالری محصول'
+        verbose_name_plural = 'تصاویر گالری محصول'
+
+    def __str__(self):
+        return f"Image for {self.product.title}"

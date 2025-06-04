@@ -25,7 +25,12 @@
                             </div>
                             <div class="col-12 col-sm-4 col-md-3">
                                 <p class="fw-bold mb-1">{{ item.product.name }}</p>
-                                <p class="text-muted small mb-0">قیمت: {{ item.price|persian_numbers }} تومان</p>
+                                {% if item.product.is_on_sale and item.product.sale_start <= now and item.product.sale_end >= now %}
+                                    <p class="text-muted small mb-0">قیمت تخفیف: {{ item.product.discount_price|persian_numbers }} تومان</p>
+                                    <p class="text-muted small mb-0"><del>قیمت اصلی: {{ item.product.price|persian_numbers }} تومان</del></p>
+                                {% else %}
+                                    <p class="text-muted small mb-0">قیمت: {{ item.price|persian_numbers }} تومان</p>
+                                {% endif %}
                             </div>
                             <div class="col-12 col-sm-3 col-md-3 d-flex justify-content-center align-items-center">
                                 <button class="btn btn-outline-secondary btn-sm px-2 update-cart" data-product-id="{{ item.product.id }}" data-action="decrease">
@@ -66,5 +71,3 @@
 </section>
 
 {% endblock  %}
-    
-

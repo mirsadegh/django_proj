@@ -1,0 +1,71 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% load humanize %} 
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-7">
+            <h1 class="mb-4">Checkout</h1>
+            <h4 class="mb-3">Billing Address</h4>
+            <form action="{% url 'orders:order_create' %}" method="post" id="orderCreateForm">
+                {% csrf_token %}
+                
+                {{ form.as_p }}
+
+                <hr class="my-4">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">Place Order</button>
+            </form>
+        </div>
+
+        <div class="col-md-5">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-primary">Your cart</span>
+                <span class="badge bg-primary rounded-pill">{{ cart|length }}</span>
+            </h4>
+            <ul class="list-group mb-3">
+                {% for item in cart %}
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">{{ item.product.title }} (x{{ item.quantity }})</h6>
+                            <small class="text-muted">Price per item: ${{ item.price|floatformat:2|intcomma }}</small>
+                        </div>
+                        <span class="text-muted">${{ item.total_price|floatformat:2|intcomma }}</span>
+                    </li>
+                {% endfor %}
+
+                <li class="list-group-item d-flex justify-content-between bg-light">
+                    <div class="text-secondary">
+                        <h6 class="my-0">Subtotal</h6>
+                    </div>
+                    <span class="text-secondary">${{ cart.get_subtotal|floatformat:2|intcomma }}</span>
+                </li>
+
+                {% if cart.discount_amount > 0 %}
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <div class="text-success">
+                            <h6 class="my-0">Discount</h6>
+                            {% if cart.coupon_code %}
+                                <small>{{ cart.coupon_code }}</small>
+                            {% elif applied_discount and applied_discount.name %}
+                                 <small>{{ applied_discount.name }}</small>
+                            {% endif %}
+                        </div>
+                        <span class="text-success">-${{ cart.discount_amount|floatformat:2|intcomma }}</span>
+                    </li>
+                {% endif %}
+                
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total (USD)</span>
+                    <strong>${{ cart.get_total_price|floatformat:2|intcomma }}</strong>
+                </li>
+            </ul>
+            <p class="text-center">
+                <a href="{% url 'cart:cart_detail' %}" class="btn btn-outline-secondary">Return to Cart</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

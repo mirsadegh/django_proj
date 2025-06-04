@@ -1,19 +1,13 @@
-# store/urls.py
 from django.urls import path
-from .views import  (
-                      AddToCartAjaxView,
-                      RemoveFromCartView, 
-                      CartView, 
-                      UpdateCartView,
-                      CartDropdownView, 
-                    )
+from . import views
 
 app_name = 'cart'
 
 urlpatterns = [
-    path('', CartView.as_view(), name='shopping_cart'),
-    path('add/<int:product_id>/', AddToCartAjaxView.as_view(), name='add_to_cart'),
-    path('remove/<int:product_id>/', RemoveFromCartView.as_view(), name='remove_from_cart'),  
-    path("update/<int:product_id>/", UpdateCartView.as_view(), name="update_cart"),
-    path("dropdown/", CartDropdownView.as_view(), name="cart_dropdown"),
+    path('', views.cart_detail, name='cart_detail'),
+    path('add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('apply_coupon/', views.apply_coupon_view, name='apply_coupon'),
+    path('remove_coupon/', views.remove_coupon_view, name='remove_coupon'),
+    path('clear/', views.clear_cart_view, name='clear_cart'),
 ]

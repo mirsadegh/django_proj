@@ -1,7 +1,16 @@
 from django import template
 from django.utils.safestring import mark_safe
+import math
 
 register = template.Library()
+
+@register.simple_tag
+def get_discount_percentage(product):
+    if product.is_on_sale and product.discount_price:
+        discount_percent = (product.price - product.discount_price) / product.price * 100
+        return f"{math.floor(discount_percent)}%"
+    return ""
+
 
 @register.filter(name='separate_numbers')
 def separate_numbers(number):

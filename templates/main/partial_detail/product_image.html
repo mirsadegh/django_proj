@@ -1,42 +1,30 @@
 {% load static %}
 <div class="col-md-5 col-md-push-2">
     <div id="product-main-img">
+        {% if product.image %}
         <div class="product-preview">
-            <img src="{% static 'main/img/product01.png' %}" alt="">
+            <img src="{{ product.image.url }}" alt="{{ product.title }}">
         </div>
-
+        {% else %}
         <div class="product-preview">
-            <img src="{% static 'main/img/product03.png' %}" alt="">
+            <img src="{% static 'main/img/default-product.png' %}" alt="Default product image"> {# Fallback image #}
         </div>
-
-        <div class="product-preview">
-            <img src="{% static 'main/img/product06.png' %}" alt="">
-        </div>
-
-        <div class="product-preview">
-            <img src="{% static 'main/img/product08.png' %}" alt="">
-        </div>
+        {% endif %}
+        
     </div>
 </div>
 
  <!-- Product thumb imgs -->
  <div class="col-md-2  col-md-pull-5">
     <div id="product-imgs">
-        <div class="product-preview">
-            <img src="{% static 'main/img/product01.png' %}" alt="">
-        </div>
-
-        <div class="product-preview">
-            <img src="{% static 'main/img/product03.png' %}" alt="">
-        </div>
-
-        <div class="product-preview">
-            <img src="{% static 'main/img/product06.png' %}" alt="">
-        </div>
-
-        <div class="product-preview">
-            <img src="{% static 'main/img/product08.png' %}" alt="">
-        </div>
+       
+        {% if product.gallery_images %}
+            {% for gallery_image in product.gallery_images.all %}
+            <div class="product-preview">
+                <img src="{{ gallery_image.image.url }}" alt="{{ product.title }} - Gallery Image">
+            </div>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
 <!-- /Product thumb imgs -->

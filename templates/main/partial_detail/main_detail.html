@@ -10,8 +10,6 @@
              {% include './product_image.html' %}
             <!-- /Product main img -->
 
-           
-
             <!-- Product details -->
             <div class="col-md-5">
                 <div class="product-details">
@@ -35,37 +33,47 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div>
-                        <h3 class="product-price">{{ product.price|persian_numbers }} تومان 
-                            <del class="product-old-price">{{product.price|persian_numbers}} تومان </del></h3>
-                        
+                    <div class="product-price">
+                        {% if product.is_on_sale %}
+                            <span class="original-price">{{ product.price|persian_numbers }} تومان</span>
+                            <span class="discounted-price">{{ product.discount_price|persian_numbers }} تومان</span>
+                            <span class="discount-badge">{% get_discount_percentage product %} تخفیف</span>
+                        {% else %}
+                            <span class="final-price">{{ product.price|persian_numbers }} تومان</span>
+                        {% endif %}
                     </div>
                     <p>{{ product.description|striptags|truncatewords:30 }}</p>
 
                     
 
                     <div class="add-to-cart">
-                        
-                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> افزودن به سبد</button>
+                        <form action="{% url 'cart:add_to_cart' product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1"> {# Assuming default quantity is 1, adjust if needed #}
+                            <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> افزودن به سبد</button>
+                        </form>
                     </div>
 
                     <ul class="product-btns">
-                        <li><a href="#"><i class="fa fa-heart-o"></i> افزودن به علاقمندی</a></li>
-                        <li><a href="#"><i class="fa fa-exchange"></i>مقایسه</a></li>
+                        <li><a href="{% url 'interests:toggle_interest' product_id=product.id %}"><i class="fa fa-heart-o"></i> افزودن به علاقمندی</a></li>
+                        <li><a href="#"><i class="fa fa-exchange"></i>مقایسه</a></li> {# Assuming 'compare' functionality is not yet implemented or out of scope for this task #}
                     </ul>
 
                     <ul class="product-links">
-                        <li>Category:</li>
-                        <li><a href="#">Headphones</a></li>
-                        <li><a href="#">Accessories</a></li>
+                        <li>دسته بندی:</li>
+                        {% if product.category %}
+                        <li><a href="#">{{ product.category.name }}</a></li>
+                        {% else %}
+                        <li>بدون دسته بندی</li>
+                        {% endif %}
                     </ul>
 
                     <ul class="product-links">
-                        <li>Share:</li>
-                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                        <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+                        <li>اشتراک گذاری:</li>
+                        <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ product.title }}" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="https://plus.google.com/share?url={{ request.build_absolute_uri }}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                        <li><a href="mailto:?subject=Check out this product: {{ product.title }}&body={{ request.build_absolute_uri }}" target="_blank"><i class="fa fa-envelope"></i></a></li>
                     </ul>
 
                 </div>
