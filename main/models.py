@@ -8,7 +8,19 @@ User = get_user_model()
 
 
 class Category(models.Model):
+    PRODUCT_TYPES = [
+        ('general', 'عمومی'),
+        ('laptop', 'لپ تاپ'),
+        ('mobile', 'گوشی'),
+    ]
+    
     name = models.CharField(max_length=200, unique=True, verbose_name="دسته‌بندی")
+    product_type = models.CharField(
+        max_length=10,
+        choices=PRODUCT_TYPES,
+        default='general',
+        verbose_name='نوع محصول'
+    )
 
     def __str__(self):
         return self.name
@@ -20,11 +32,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    PRODUCT_TYPES = [
-        ('general', 'عمومی'),
-        ('laptop', 'لپ تاپ'),
-        ('mobile', 'گوشی'),
-    ]
     
     title = models.CharField(max_length=100, verbose_name='عنوان')
     category = models.ForeignKey(
@@ -40,13 +47,6 @@ class Product(models.Model):
     available = models.BooleanField(default=True, verbose_name="موجود")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='آخرین بروزرسانی')
-    product_type = models.CharField(
-        max_length=10,
-        choices=PRODUCT_TYPES,
-        default='general',
-        verbose_name='نوع محصول'
-    )
-    
     # Laptop fields
     cpu = models.CharField(max_length=100, verbose_name="پردازنده", null=True, blank=True)
     ram = models.CharField(max_length=50, verbose_name="حافظه رم", null=True, blank=True)

@@ -10,7 +10,8 @@ from .models import (
 
 # ثبت مدل دسته‌بندی
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name', 'product_type')
+    list_filter = ('product_type',)
     
 
 # ثبت مدل محصول (مشترک برای همه محصولات)
