@@ -44,7 +44,16 @@
                     </div>
                     <p>{{ product.description|striptags|truncatewords:30 }}</p>
 
-                    
+                    {% if product.product_specifications.all %}
+                    <div class="product-specs">
+                        <h4>مشخصات محصول:</h4>
+                        <ul>
+                            {% for spec in product.product_specifications.all %}
+                            <li><strong>{{ spec.specification.name }}:</strong> {{ spec.value }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
 
                     <div class="add-to-cart">
                         <form action="{% url 'cart:add_to_cart' product.id %}" method="post">

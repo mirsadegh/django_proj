@@ -1,4 +1,3 @@
-
 <div class="col-md-12">
     <div id="product-tab">
         <!-- product tab nav -->
@@ -24,55 +23,53 @@
             <div id="tab2" class="tab-pane fade in">
                 <div class="row">
                     <div class="product-details col-md-12">
-                    {% if product.laptop_details %}
+                    {% if product.category.product_type == 'laptop' %}
                     <h4 class="details-title"><i class="fa fa-laptop"></i> مشخصات لپ‌تاپ</h4>
                     <table class="table table-striped">
                         <tbody>
                             <tr>
                                 <td><strong>پردازنده:</strong></td>
-                                <td>{{ product.laptop_details.cpu }}</td>
+                                <td>{{ product.cpu }}</td>
                             </tr>
                             <tr>
                                 <td><strong>رم:</strong></td>
-                                <td>{{ product.laptop_details.ram }}</td>
+                                <td>{{ product.ram }}</td>
                             </tr>
                             <tr>
                                 <td><strong>حافظه داخلی:</strong></td>
-                                <td>{{ product.laptop_details.storage }}</td>
+                                <td>{{ product.storage }}</td>
                             </tr>
                             <tr>
                                 <td><strong>اندازه صفحه نمایش:</strong></td>
-                                <td>{{ product.laptop_details.screen_size }}</td>
+                                <td>{{ product.screen_size }}</td>
                             </tr>
                         </tbody>
                     </table>
-
-                {% elif product.mobile_details %}
+                    {% elif product.category.product_type == 'mobile' %}
                     <h4 class="details-title"><i class="fa fa-mobile"></i> مشخصات گوشی</h4>
                     <table class="table table-striped">
                         <tbody>
                             <tr>
                                 <td><strong>سیستم عامل:</strong></td>
-                                <td>{{ product.mobile_details.os }}</td>
+                                <td>{{ product.os }}</td>
                             </tr>
                             <tr>
                                 <td><strong>دوربین:</strong></td>
-                                <td>{{ product.mobile_details.camera }}</td>
+                                <td>{{ product.camera }}</td>
                             </tr>
                             <tr>
                                 <td><strong>باتری:</strong></td>
-                                <td>{{ product.mobile_details.battery }}</td>
+                                <td>{{ product.battery }}</td>
                             </tr>
                             <tr>
                                 <td><strong>رزولوشن صفحه نمایش:</strong></td>
-                                <td>{{ product.mobile_details.screen_resolution }}</td>
+                                <td>{{ product.screen_resolution }}</td>
                             </tr>
                         </tbody>
                     </table>
-
-                {% else %}
-                    <p class="alert alert-warning">مشخصات خاصی برای این محصول ثبت نشده است.</p>
-                {% endif %}
+                    {% else %}
+                        <p class="alert alert-warning">مشخصات خاصی برای این محصول ثبت نشده است.</p>
+                    {% endif %}
                     </div>
                 </div>
             </div>

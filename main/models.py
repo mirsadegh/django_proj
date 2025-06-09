@@ -47,17 +47,6 @@ class Product(models.Model):
     available = models.BooleanField(default=True, verbose_name="موجود")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='آخرین بروزرسانی')
-    # Laptop fields
-    cpu = models.CharField(max_length=100, verbose_name="پردازنده", null=True, blank=True)
-    ram = models.CharField(max_length=50, verbose_name="حافظه رم", null=True, blank=True)
-    storage = models.CharField(max_length=50, verbose_name="حافظه داخلی", null=True, blank=True)
-    screen_size = models.CharField(max_length=50, verbose_name="اندازه صفحه نمایش", null=True, blank=True)
-    
-    # Mobile fields
-    os = models.CharField(max_length=50, verbose_name="سیستم عامل", null=True, blank=True)
-    camera = models.CharField(max_length=50, verbose_name="دوربین", null=True, blank=True)
-    battery = models.CharField(max_length=50, verbose_name="باتری", null=True, blank=True)
-    screen_resolution = models.CharField(max_length=50, verbose_name="رزولوشن صفحه نمایش", null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -148,3 +137,44 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.product.title}"
+
+
+class Specification(models.Model):
+    name = models.CharField(max_length=100, verbose_name="نام مشخصه")
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        related_name='specifications',
+        verbose_name="دسته‌بندی"
+    )
+
+    class Meta:
+        unique_together = ('name', 'category')
+        verbose_name = 'مشخصه'
+        verbose_name_plural = 'مشخصات'
+
+    def __str__(self):
+        return f"{self.name} ({self.category.name})"
+
+
+class ProductSpecification(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='product_specifications',
+        verbose_name="محصول"
+    )
+    specification = models.ForeignKey(
+        Specification,
+        on_delete=models.CASCADE,
+        verbose_name="مشخصه"
+    )
+    value = models.CharField(max_length=255, verbose_name="مقدار")
+
+    class Meta:
+        unique_together = ('product', 'specification')
+        verbose_name = 'مشخصه محصول'
+        verbose_name_plural = 'مشخصات محصول'
+
+    def __str__(self):
+        return f"{self.product.title} - {self.specification.name}: {self.value}"
