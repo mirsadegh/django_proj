@@ -14,36 +14,53 @@
 
 	/////////////////////////////////////////
 
-	// Products Slick
-	$('.products-slick').each(function() {
-		var $this = $(this),
-				$nav = $this.attr('data-nav');
+	// Products Slick - Initialize on load and after dynamic content changes
+	function initProductSliders() {
+		$('.products-slick').each(function() {
+			var $this = $(this),
+					$nav = $this.attr('data-nav');
 
-		$this.slick({
-			slidesToShow: 4,
-			slidesToScroll: 1,
-			autoplay: true,
-			infinite: true,
-			speed: 300,
-			dots: false,
-			arrows: true,
-			appendArrows: $nav ? $nav : false,
-			responsive: [{
-	        breakpoint: 991,
-	        settings: {
-	          slidesToShow: 2,
-	          slidesToScroll: 1,
-	        }
-	      },
-	      {
-	        breakpoint: 480,
-	        settings: {
-	          slidesToShow: 1,
-	          slidesToScroll: 1,
-	        }
-	      },
-	    ]
+			// Only initialize if not already initialized
+			if (!$this.hasClass('slick-initialized')) {
+				console.log('Initializing products-slick for element:', $this);
+				$this.slick({
+					slidesToShow: 5,
+					slidesToScroll: 5,
+					autoplay: false,
+					infinite: false,
+					speed: 300,
+					dots: false,
+					arrows: true,
+					draggable: true,
+					responsive: [{
+						breakpoint: 1200,
+						settings: { slidesToShow: 4, slidesToScroll: 4 }
+					},
+					{
+						breakpoint: 991,
+						settings: { slidesToShow: 3, slidesToScroll: 3 }
+					},
+					{
+						breakpoint: 768,
+						settings: { slidesToShow: 2, slidesToScroll: 2 }
+					},
+					{
+						breakpoint: 480,
+						settings: { slidesToShow: 1, slidesToScroll: 1 }
+					}]
+				});
+			}
 		});
+	}
+
+	// Initialize on document ready with a small delay
+	$(document).ready(function() {
+		setTimeout(initProductSliders, 100);
+	});
+
+	// Reinitialize when content is dynamically loaded
+	$(document).on('contentLoaded', function() {
+		initProductSliders();
 	});
 
 	// Products Widget Slick
@@ -103,6 +120,7 @@
 	/////////////////////////////////////////
 
 	// Input number
+	/*
 	$('.input-number').each(function() {
 		var $this = $(this),
 		$input = $this.find('input[type="number"]'),
@@ -164,11 +182,10 @@
 			handle ? priceInputMax.value = value : priceInputMin.value = value
 		});
 	}
+	*/
 
 
 
 
 
 })(jQuery);
-
-

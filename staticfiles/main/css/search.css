@@ -1,0 +1,41 @@
+/* Search Page Specific Styles */
+
+.search-page-header {
+    margin-bottom: 30px;
+}
+
+.search-filters-container {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.search-results-summary {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #666;
+}
+
+.search-form .form-control {
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.search-form .btn-primary {
+    width: 100%;
+    padding: 10px;
+}
+
+.search-form label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-form .btn-primary {
+        margin-top: 10px;
+    }
+} 

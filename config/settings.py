@@ -139,6 +139,14 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Global static directory
 ]
+
+STATIC_ROOT = BASE_DIR / "staticfiles" # Add STATIC_ROOT for collectstatic
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 import os
 # MEDIA_ROOT = BASE_DIR / 'media'  # File system path to store media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -214,4 +222,3 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 
 # شماره پیگیری 23460464789 خرید اینترنت ۳ماهه ۱۲۰۰ گیگابایت تاریخ ۲/۱۲/۱۴۰۳
-

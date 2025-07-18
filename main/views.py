@@ -18,8 +18,8 @@ class Index(View):
     template_name = "main/index.html"
 
     def get(self, request, *args, **kwargs):
-        products = Product.objects.filter(available=True)
-        context = {'products': products}
+        products = Product.objects.filter(available=True).order_by('-created_at')
+        context = {}
         if self.request.user.is_authenticated:
             products = products.prefetch_related(
                 Prefetch(
@@ -34,6 +34,7 @@ class Index(View):
                 product.id: bool(product.user_interests) 
                 for product in products
             }
+        context['products'] = products
 
         return render(request, self.template_name, context=context)
     
@@ -219,5 +220,3 @@ class SearchView(View):
         }
         
         return render(request, self.template_name, context=context)
-
-

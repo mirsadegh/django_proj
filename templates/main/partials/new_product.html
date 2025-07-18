@@ -21,12 +21,10 @@
                         <!-- tab -->
                         <div id="tab1" class="tab-pane active">
                             <div class="products-slick" data-nav="#slick-nav-1">
-                                <!-- product -->
-                                 
-                                 {% for product in products %}
+                                {% for product in products %}
                                     <div class="product">
                                     <div class="product-img">
-                                        <img src="{{ product.image.url }}" width="263" height="263" alt="">
+                                        <img src="{{ product.image.url }}" width="263" height="263" alt="{{ product.title }}" style="max-width:100%; height:auto;">
                                         <div class="product-label">
                                             <span class="sale">-30%</span>
                                             <span class="new">NEW</span>
@@ -95,4 +93,3 @@
     </div>
     <!-- /container -->
 </div>
-
