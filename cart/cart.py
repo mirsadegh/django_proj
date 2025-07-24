@@ -10,6 +10,7 @@ CART_SESSION_DATA_KEY = 'cart_session_data' # Keep as is for now
 class Cart:
     def __init__(self, request):
         self.session = request.session
+        self.request = request
         cart_data = self.session.get(CART_SESSION_DATA_KEY)
 
         if not cart_data:
@@ -72,7 +73,7 @@ class Cart:
         cart = self.cart.copy() # Use a copy for iteration
 
         for product in products:
-            item_data = cart[str(product.id)]
+            item_data = cart[str(product.id)].copy()
             item_data['product'] = product
             item_data['price'] = Decimal(item_data['price']) # Price of one unit
             item_data['total_price'] = item_data['price'] * item_data['quantity'] # Total for this line item
@@ -112,11 +113,11 @@ class Cart:
         # Note: The 'user' argument to calculate_discount_for_cart is not available directly in the Cart model.
         # If user-specific discounts are needed, the view calling this might need to pass the user,
         # or the request object could be passed to the cart and then to the service.
-        # For now, we'll pass `user=None`.
+        # We now pass the user from the stored request.
         calculated_amount, applied_discount_object, service_message = calculate_discount_for_cart(
             cart=self,  # Pass the cart instance itself
             discount_code=self.coupon_code,
-            user=None # Or self.request.user if request is stored in cart
+            user=self.request.user
         )
 
         self.discount_amount = calculated_amount

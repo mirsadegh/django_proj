@@ -26,15 +26,22 @@
                                     <div class="product-img">
                                         <img src="{{ product.image.url }}" width="263" height="263" alt="{{ product.title }}" style="max-width:100%; height:auto;">
                                         <div class="product-label">
-                                            <span class="sale">-30%</span>
+                                            {% if product.current_price < product.price %}
+                                                <span class="sale">-{{ product.discount_percentage|floatformat:"0" }}%</span>
+                                            {% endif %}
+                                            
                                             <span class="new">NEW</span>
                                         </div>
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">{{ product.category.name }}</p>
                                         <h3 class="product-name"><a href="#">{{ product.title }}</a></h3>
-                                        <h4 class="product-price">{{ product.price|persian_numbers }} تومان 
-                                            <del class="product-old-price">{{ product.price|persian_numbers }} تومان</del></h4>
+                                        {% if product.current_price < product.price %}
+                                            <h4 class="product-price">{{ product.current_price|persian_numbers }} تومان 
+                                                <del class="product-old-price">{{ product.price|persian_numbers }} تومان</del></h4>
+                                        {% else %}
+                                            <h4 class="product-price">{{ product.price|persian_numbers }} تومان</h4>
+                                        {% endif %}
                                         <div class="product-rating">
                                            
                                             <div class="star-rating">
@@ -70,9 +77,6 @@
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
-                                        
-                                            
-                                              <!-- <button class="btn btn-warning add-to-cart" data-product-id="{{ product.id }}">🛒 افزودن به سبد </button>       -->
                                               <button class="add-to-cart-btn" data-product-id="{{ product.id }}"><i class="fa fa-shopping-cart"></i> افزودن به سبد خرید</button>
                                     </div>
                                 </div>
@@ -84,6 +88,49 @@
                             <div id="slick-nav-1" class="products-slick-nav"></div>
                         </div>
                         <!-- /tab -->
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Handle "Add to Cart" button clicks
+                            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                                button.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    const productId = this.dataset.productId;
+                                    console.log(`Adding product ${productId} to cart`);
+                                    
+                                    // Make a POST request to add the product to cart
+                                    fetch(`/cart/add/${productId}/`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRFToken': '{{ csrf_token }}',
+                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                            'X-Requested-With': 'XMLHttpRequest'
+                                        },
+                                        body: new URLSearchParams({
+                                            'quantity': 1,
+                                            'override_quantity': 'false'
+                                        })
+                                    })
+                                    .then(response => {
+                                        console.log(`Response status: ${response.status}`);
+                                        // Check if the response was successful (2xx) or a redirect (3xx)
+                                        if (response.ok || [301, 302, 303, 307, 308].includes(response.status)) {
+                                            alert('محصول با موفقیت به سبد خرید اضافه شد!');
+                                        } else {
+                                            // Get response text for more details
+                                            response.text().then(text => {
+                                                console.error('Error response:', text);
+                                                alert(`خطا در افزودن محصول به سبد خرید! وضعیت: ${response.status}`);
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Fetch error:', error);
+                                        alert('خطا در ارتباط با سرور!');
+                                    });
+                                });
+                            });
+                        });
+                        </script>
                     </div>
                 </div>
             </div>

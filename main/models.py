@@ -89,6 +89,16 @@ class Product(models.Model):
             return discounts.first().calculate_discounted_price(self)
         return self.price
 
+    @property
+    def discount_percentage(self):
+        """
+        Calculate discount percentage if product is on sale
+        """
+        if self.current_price < self.price:
+            discount_amount = self.price - self.current_price
+            return round((discount_amount / self.price) * 100)
+        return 0
+
 
 
 

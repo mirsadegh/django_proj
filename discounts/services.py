@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.utils import timezone
 from .models import Discount
-# from main.models import Product, Category # Needed for product/category specific discounts
+from main.models import Product, Category # Needed for product/category specific discounts
 
 def get_applicable_automatic_discounts(cart, user=None):
     """
@@ -46,32 +46,22 @@ def calculate_discount_for_cart(cart, discount_code=None, user=None):
             if discount.applies_to == 'ENTIRE_ORDER':
                 base_for_discount = cart_subtotal
             elif discount.applies_to == 'SPECIFIC_PRODUCTS':
-                # TODO: Implement logic for specific products
-                # relevant_items_total = sum(
-                #     item['total_price'] for item in cart 
-                #     if item['product'] in discount.products.all()
-                # )
-                # if relevant_items_total == Decimal('0.00'):
-                #     return Decimal('0.00'), None, "Coupon not applicable to items in cart."
-                # base_for_discount = relevant_items_total
-                message = "Specific product discounts not yet fully implemented in service."
-                # For now, let's assume it applies to cart_subtotal if it's a product discount type
-                # This is a simplification until product-specific logic is built.
-                base_for_discount = cart_subtotal # TEMPORARY
-                pass # Pass for now, will return 0 discount if not handled
+                relevant_items_total = sum(
+                    item['total_price'] for item in cart
+                    if item['product'] in discount.products.all()
+                )
+                if relevant_items_total == Decimal('0.00'):
+                    return Decimal('0.00'), None, "Coupon not applicable to items in cart."
+                base_for_discount = relevant_items_total
             elif discount.applies_to == 'SPECIFIC_CATEGORIES':
-                # TODO: Implement logic for specific categories
-                # cart_categories = {item['product'].category for item in cart if item['product'].category}
-                # relevant_items_total = sum(
-                #    item['total_price'] for item in cart 
-                #    if item['product'].category in discount.categories.all()
-                # )
-                # if relevant_items_total == Decimal('0.00'):
-                #    return Decimal('0.00'), None, "Coupon not applicable to categories in cart."
-                # base_for_discount = relevant_items_total
-                message = "Specific category discounts not yet fully implemented in service."
-                base_for_discount = cart_subtotal # TEMPORARY
-                pass # Pass for now
+                cart_categories = {item['product'].category for item in cart if item['product'].category}
+                relevant_items_total = sum(
+                   item['total_price'] for item in cart
+                   if item['product'].category in discount.categories.all()
+                )
+                if relevant_items_total == Decimal('0.00'):
+                   return Decimal('0.00'), None, "Coupon not applicable to categories in cart."
+                base_for_discount = relevant_items_total
 
             if base_for_discount > Decimal('0.00') or discount.applies_to == 'ENTIRE_ORDER': # Ensure some base for calculation
                 if discount.discount_type == 'PERCENTAGE':

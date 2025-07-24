@@ -4,19 +4,24 @@ from django.contrib import messages
 from main.models import Product # Assuming Product model is in 'main'
 from .cart import Cart
 from discounts.models import Discount 
-
+from django.http import JsonResponse
 def cart_detail(request):
     cart = Cart(request)
     applied_discount_instance = None
-    if cart.applied_discount_id:
-        try:
-            # This import should be here or at the top if used more broadly 
-            applied_discount_instance = Discount.objects.get(id=cart.applied_discount_id)
-        except Discount.DoesNotExist:
-            # If discount ID in session is invalid, clear it from cart
-            cart.clear_discount() 
-            messages.error(request, "تخفیف قبلی دیگر معتبر نیست و حذف شده است.")
-            # No need to redirect here, cart_detail will render with updated cart object
+    
+    try:
+        if cart.applied_discount_id:
+            try:
+                applied_discount_instance = Discount.objects.get(id=cart.applied_discount_id)
+            except Discount.DoesNotExist:
+                # If discount ID in session is invalid, clear it from cart
+                cart.clear_discount() 
+                messages.error(request, "تخفیف قبلی دیگر معتبر نیست و حذف شده است.")
+    except Exception as e:
+        # Handle any other exceptions gracefully
+        messages.error(request, f"خطا در بارگیری سبد خرید: {str(e)}")
+        # Create a new cart instance to prevent further errors
+        cart = Cart(request)
 
     return render(request, 'cart/cart_detail.html', {
         'cart': cart,
@@ -25,14 +30,34 @@ def cart_detail(request):
 
 @require_POST
 def add_to_cart(request, product_id):
-    cart = Cart(request)
-    product = get_object_or_404(Product, id=product_id)
-    quantity = int(request.POST.get('quantity', 1)) # Default to 1 if not specified
-    override_quantity = request.POST.get('override_quantity', 'false').lower() == 'true'
-    
-    cart.add(product=product, quantity=quantity, override_quantity=override_quantity)
-    messages.success(request, f"'{product.title}' has been added to your cart.")
-    return redirect('cart:cart_detail') # Assuming you have a URL name 'cart_detail'
+    try:
+        cart = Cart(request)
+        product = get_object_or_404(Product, id=product_id)
+        quantity = int(request.POST.get('quantity', 1))
+        override_quantity = request.POST.get('override_quantity', 'false').lower() == 'true'
+
+        cart.add(product=product, quantity=quantity, override_quantity=override_quantity)
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'status': 'success',
+                'message': f"'{product.title}' به سبد خرید شما افزوده شد.",
+                'cart_total': len(cart),
+            })
+        
+        messages.success(request, f"'{product.title}' به سبد خرید شما افزوده شد.")
+        return redirect('cart:cart_detail')
+
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Error in add_to_cart: {e}")
+        # If it's an AJAX request, return a JSON error response
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'error', 'message': 'خطا در افزودن محصول به سبد خرید.'}, status=500)
+        
+        # For non-AJAX, show an error message and redirect
+        messages.error(request, "We encountered an error while adding the item to your cart.")
+        return redirect('cart:cart_detail')
 
 @require_POST # Or handle GET if you want a confirmation page before removal
 def remove_from_cart(request, product_id):

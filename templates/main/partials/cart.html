@@ -2,7 +2,7 @@
 {% load custom_filters %}
 <div class="dropdown">
     <a id="cart-toggle" class="dropdown-toggle cursor-pointer" data-toggle="dropdown" aria-expanded="true">
-        <span id="cart-item-count" class="badge badge-danger">0</span>  <!-- تعداد محصولات -->
+        <span id="cart-item-count" class="badge badge-danger">{{ cart|length }}</span>  <!-- تعداد محصولات -->
         <i class="fa fa-shopping-cart"></i>
         <span>سبد خرید</span>
     </a>
@@ -11,11 +11,11 @@
             <p class="text-center text-muted">در حال بارگذاری...</p>
         </div>
         <div class="cart-summary">
-            <small id="cart-items-count">0 محصول انتخاب شده</small>
-            <h5>جمع کل: <span id="cart-total">0 تومان</span></h5>
+            <small id="cart-items-count">{{ cart|length }} محصول انتخاب شده</small>
+            <h5>جمع کل: <span id="cart-total">{{ cart.get_total_price|floatformat:0 }} تومان</span></h5>
         </div>
         <div class="cart-btns">
-            <a href="#">سبد خرید</a>
+            <a href="{% url 'cart:cart_detail' %}">سبد خرید</a>
             <a href="#">پرداخت <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
