@@ -1,15 +1,13 @@
-{% load custom_filters %}
+{% load custom_filters static %}
 <div class="section">
     <!-- container -->
     <div class="container">
         <!-- row -->
         <div class="row">
-
             <!-- section title -->
             <div class="col-md-12">
                 <div class="section-title">
                     <h3 class="title">محصولات جدید</h3>
-            
                 </div>
             </div>
             <!-- /section title -->
@@ -20,117 +18,93 @@
                     <div class="products-tabs">
                         <!-- tab -->
                         <div id="tab1" class="tab-pane active">
-                            <div class="products-slick" data-nav="#slick-nav-1">
-                                {% for product in products %}
-                                    <div class="product">
-                                    <div class="product-img">
-                                        <img src="{{ product.image.url }}" width="263" height="263" alt="{{ product.title }}" style="max-width:100%; height:auto;">
-                                        <div class="product-label">
-                                            {% if product.current_price < product.price %}
-                                                <span class="sale">-{{ product.discount_percentage|floatformat:"0" }}%</span>
-                                            {% endif %}
-                                            
-                                            <span class="new">NEW</span>
-                                        </div>
-                                    </div>
-                                    <div class="product-body">
-                                        <p class="product-category">{{ product.category.name }}</p>
-                                        <h3 class="product-name"><a href="#">{{ product.title }}</a></h3>
-                                        {% if product.current_price < product.price %}
-                                            <h4 class="product-price">{{ product.current_price|persian_numbers }} تومان 
-                                                <del class="product-old-price">{{ product.price|persian_numbers }} تومان</del></h4>
-                                        {% else %}
-                                            <h4 class="product-price">{{ product.price|persian_numbers }} تومان</h4>
-                                        {% endif %}
-                                        <div class="product-rating">
-                                           
-                                            <div class="star-rating">
-                                                {{ product.average_rating|star_rating }}
+                            <!-- بررسی وجود محصولات -->
+                            {% if products %}
+                                <div class="products-slick" dir="rtl">
+                                    {% for product in products %}
+                                        <div class="product">
+                                            <div class="product-img">
+                                                {% if product.image %}
+                                                    <img src="{{ product.image.url }}" 
+                                                         alt="{{ product.title }}" 
+                                                         loading="lazy"
+                                                         onerror="this.src='{% static 'images/no-image.png' %}'">
+                                                {% else %}
+                                                    <img src="{% static 'images/no-image.png' %}" 
+                                                         alt="{{ product.title }}">
+                                                {% endif %}
+                                                <div class="product-label">
+                                                    {% if product.current_price < product.price %}
+                                                        <span class="sale">-{{ product.discount_percentage|floatformat:"0" }}%</span>
+                                                    {% endif %}
+                                                    <span class="new">NEW</span>
+                                                </div>
+                                            </div>
+                                            <div class="product-body">
+                                                <p class="product-category">{{ product.category.name }}</p>
+                                                <h3 class="product-name">
+                                                    <a href="{% url 'product_detail' product.slug %}">{{ product.title }}</a>
+                                                </h3>
+                                                {% if product.current_price < product.price %}
+                                                    <h4 class="product-price">
+                                                        {{ product.current_price|persian_numbers }} تومان 
+                                                        <del class="product-old-price">{{ product.price|persian_numbers }} تومان</del>
+                                                    </h4>
+                                                {% else %}
+                                                    <h4 class="product-price">{{ product.price|persian_numbers }} تومان</h4>
+                                                {% endif %}
+                                                <div class="product-rating">
+                                                    <div class="star-rating">
+                                                        {{ product.average_rating|star_rating }}
+                                                    </div>
+                                                </div>
+                                                <div class="product-btns">
+                                                    {% if request.user.is_authenticated %}
+                                                        <button
+                                                            class="add-to-wishlist {% if product_interests|get_item:product.id %}active{% endif %}"
+                                                            data-product-id="{{ product.id }}"
+                                                            data-url="{% url 'interests:toggle_interest' product.id %}"
+                                                            tabindex="0"
+                                                        >
+                                                            <i class="fa {% if product_interests|get_item:product.id %}fa-heart text-red{% else %}fa-heart-o{% endif %}"></i>
+                                                            <span class="tooltipp">
+                                                                {% if product_interests|get_item:product.id %}
+                                                                    حذف از علاقه مندی
+                                                                {% else %}
+                                                                    افزودن به علاقه مندی
+                                                                {% endif %}
+                                                            </span>
+                                                        </button>
+                                                    {% endif %}
+                                                    
+                                                    <button class="add-to-compare">
+                                                        <i class="fa fa-exchange"></i>
+                                                        <span class="tooltipp">مقایسه</span>
+                                                    </button>
+                                                    <button class="quick-view">
+                                                        <a href="{% url 'product_detail' product.slug %}">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        <span class="tooltipp">نمایش</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="add-to-cart">
+                                                <button class="add-to-cart-btn" data-product-id="{{ product.id }}">
+                                                    <i class="fa fa-shopping-cart"></i> افزودن به سبد خرید
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="product-btns">
-                                            
-                                            {% if request.user.is_authenticated %}
-                                                <button
-                                                    class="add-to-wishlist {% if product_interests|get_item:product.id %}active{% endif %}"
-                                                    data-product-id="{{ product.id }}"
-                                                    data-url="{% url 'interests:toggle_interest' product.id %}"
-                                                    tabindex="0"
-                                                >
-                                                    <i class="fa {% if product_interests|get_item:product.id %}fa-heart text-red{% else %}fa-heart-o{% endif %}"></i>
-                                                    <span class="tooltipp">
-                                                        {% if product_interests|get_item:product.id %}
-                                                            حذف از علاقه مندی
-                                                        {% else %}
-                                                            افزودن به علاقه مندی
-                                                        {% endif %}
-                                                    </span>
-                                                </button>
-                                            {% endif %}
-                                                
-                                            
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">مقایسه</span></button>
-                                            <button class="quick-view">
-                                                <a href="{% url 'product_detail' product.slug %}"><i class="fa fa-eye"></i></a>
-                                                <span class="tooltipp">نمایش</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                              <button class="add-to-cart-btn" data-product-id="{{ product.id }}"><i class="fa fa-shopping-cart"></i> افزودن به سبد خرید</button>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                                 {% endfor %}
-                                    
-                                
-                            
-                            </div>
-                            <div id="slick-nav-1" class="products-slick-nav"></div>
+                            {% else %}
+                                <!-- نمایش پیام در صورت عدم وجود محصول -->
+                                <div class="no-products text-center">
+                                    <p>هنوز محصولی اضافه نشده است.</p>
+                                </div>
+                            {% endif %}
                         </div>
                         <!-- /tab -->
-                        <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            // Handle "Add to Cart" button clicks
-                            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                                button.addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    const productId = this.dataset.productId;
-                                    console.log(`Adding product ${productId} to cart`);
-                                    
-                                    // Make a POST request to add the product to cart
-                                    fetch(`/cart/add/${productId}/`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-CSRFToken': '{{ csrf_token }}',
-                                            'Content-Type': 'application/x-www-form-urlencoded',
-                                            'X-Requested-With': 'XMLHttpRequest'
-                                        },
-                                        body: new URLSearchParams({
-                                            'quantity': 1,
-                                            'override_quantity': 'false'
-                                        })
-                                    })
-                                    .then(response => {
-                                        console.log(`Response status: ${response.status}`);
-                                        // Check if the response was successful (2xx) or a redirect (3xx)
-                                        if (response.ok || [301, 302, 303, 307, 308].includes(response.status)) {
-                                            alert('محصول با موفقیت به سبد خرید اضافه شد!');
-                                        } else {
-                                            // Get response text for more details
-                                            response.text().then(text => {
-                                                console.error('Error response:', text);
-                                                alert(`خطا در افزودن محصول به سبد خرید! وضعیت: ${response.status}`);
-                                            });
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error('Fetch error:', error);
-                                        alert('خطا در ارتباط با سرور!');
-                                    });
-                                });
-                            });
-                        });
-                        </script>
                     </div>
                 </div>
             </div>
@@ -140,3 +114,93 @@
     </div>
     <!-- /container -->
 </div>
+
+<!-- اضافه کردن CSS مخصوص اسلایدر -->
+<style>
+/* استایل‌های ضروری برای اسلایدر */
+.products-slick .slick-arrow {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 1000 !important;
+    background: #d10024 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 50px !important;
+    height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    border: none !important;
+    outline: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+    font-size: 0 !important;
+}
+
+.products-slick .slick-arrow:hover {
+    background: #b8001f !important;
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+.products-slick .slick-arrow:before {
+    font-family: 'FontAwesome' !important;
+    font-size: 18px !important;
+    color: white !important;
+}
+
+.products-slick .slick-prev {
+    right: -25px !important;
+    left: auto !important;
+}
+
+.products-slick .slick-next {
+    left: -25px !important;
+    right: auto !important;
+}
+
+.products-slick .slick-prev:before {
+    content: '\f104' !important;
+}
+
+.products-slick .slick-next:before {
+    content: '\f105' !important;
+}
+
+.products-slick .slick-list {
+    padding: 0 50px !important;
+    overflow: visible !important;
+}
+
+.products-slick .slick-slide {
+    padding: 0 10px !important;
+}
+
+/* RTL fixes */
+[dir="rtl"] .products-slick .slick-prev {
+    right: -25px !important;
+    left: auto !important;
+}
+
+[dir="rtl"] .products-slick .slick-next {
+    left: -25px !important;
+    right: auto !important;
+}
+
+@media (max-width: 768px) {
+    .products-slick .slick-arrow {
+        width: 40px !important;
+        height: 40px !important;
+    }
+    
+    .products-slick .slick-arrow:before {
+        font-size: 14px !important;
+    }
+    
+    .products-slick .slick-list {
+        padding: 0 45px !important;
+    }
+}
+</style>

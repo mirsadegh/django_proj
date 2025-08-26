@@ -18,24 +18,34 @@ class Index(View):
     template_name = "main/index.html"
 
     def get(self, request, *args, **kwargs):
-        products = Product.objects.filter(available=True).order_by('-created_at')
-        context = {}
-        if self.request.user.is_authenticated:
-            products = products.prefetch_related(
-                Prefetch(
-                    'interests',
-                    queryset=Interest.objects.filter(user=request.user),
-                    to_attr='user_interests'
-                )
+        # Fetch the 12 most recent available products
+        products = Product.objects.filter(
+            available=True
+        ).select_related('category').order_by('-created_at')[:12]
+        
+        context = {
+            'products': products,
+            'products_count': products.count() if hasattr(products, 'count') else len(products)
+        }
+        
+        if request.user.is_authenticated:
+            # Get product IDs for efficient querying
+            product_ids = [p.id for p in products]
+            
+            # Check which products the user has shown interest in
+            interested_products = set(
+                Interest.objects.filter(
+                    user=request.user,
+                    product_id__in=product_ids
+                ).values_list('product_id', flat=True)
             )
             
-            # Create a dictionary of product interests for efficient lookup
+            # Create a dictionary mapping product IDs to interest status
             context['product_interests'] = {
-                product.id: bool(product.user_interests) 
+                product.id: (product.id in interested_products)
                 for product in products
             }
-        context['products'] = products
-
+        
         return render(request, self.template_name, context=context)
     
         

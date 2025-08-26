@@ -16,7 +16,7 @@ class OrderCreateView(View):
     def get(self, request, *args, **kwargs):
         cart = Cart(request)
         if not cart:
-            messages.warning(request, "Your cart is empty. Please add items before checking out.")
+            messages.warning(request, "سبد خرید شما خالی است. لطفا محصول به سبد خرید اضافه کنید.")
             return redirect('cart:cart_detail')
             
         initial_data = {}
@@ -30,7 +30,7 @@ class OrderCreateView(View):
     def post(self, request, *args, **kwargs):
         cart = Cart(request)
         if not cart:
-            messages.warning(request, "Your cart is empty. Please add items before checking out.")
+            messages.warning(request, "سبد خرید شما خالی است. لطفا محصول به سبد خرید اضافه کنید.")
             return redirect('cart:cart_detail')
             
         form = OrderForm(request.POST)
@@ -54,18 +54,18 @@ class OrderCreateView(View):
                             )
                             discount_instance.increment_uses()
                         except Discount.DoesNotExist:
-                            messages.error(request, "Applied discount was not found. Please try again.")
+                            messages.error(request, "تخفیف اعمال شده یافت نشد. لطفاً دوباره تلاش کنید.")
                             return render(request, 'orders/order_create.html', {'cart': cart, 'form': form})
 
                     cart.clear()
                     request.session['order_id'] = order.id
-                    messages.success(request, "Your order has been placed successfully!")
+                    messages.success(request, "سفارش شما با موفقیت ثبت شد!")
                     return redirect(reverse('orders:order_created_summary'))
                     
             except Exception as e:
-                messages.error(request, f"An error occurred while processing your order: {e}")
+                messages.error(request, f"هنگام پردازش سفارش شما خطایی رخ داد: {e}")
         else:
-            messages.error(request, "There was an error with your information. Please check the details below.")
+            messages.error(request, "اطلاعات شما دارای خطا بود. لطفاً جزئیات زیر را بررسی کنید.")
             
         return render(request, 'orders/order_create.html', {'cart': cart, 'form': form})
 
@@ -83,7 +83,7 @@ class OrderSummaryView(View):
                 pass
                 
         if not order:
-            messages.warning(request, "Could not retrieve your order summary. Please check your order history or contact support.")
+            messages.warning(request, "نتوانستیم خلاصه سفارش شما را بازیابی کنیم. لطفاً تاریخچه سفارشات خود را بررسی کنید یا با پشتیبانی تماس بگیرید.")
             return redirect('index')
             
         return render(request, 'orders/order_created_summary.html', {'order': order})

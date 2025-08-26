@@ -15,14 +15,14 @@ class Order(models.Model):
         verbose_name="User"
     )
     # Basic address fields - you might want a separate Address model later
-    first_name = models.CharField(max_length=100, verbose_name="First Name")
-    last_name = models.CharField(max_length=100, verbose_name="Last Name")
-    email = models.EmailField(verbose_name="Email")
-    address = models.CharField(max_length=250, verbose_name="Address Line 1")
-    postal_code = models.CharField(max_length=20, verbose_name="Postal Code")
-    city = models.CharField(max_length=100, verbose_name="City")
+    first_name = models.CharField(max_length=100, verbose_name="اسم")
+    last_name = models.CharField(max_length=100, verbose_name="فامیلی")
+    email = models.EmailField(verbose_name="ایمیل")
+    address = models.CharField(max_length=250, verbose_name="ادرس")
+    postal_code = models.CharField(max_length=20, verbose_name="کد پستی")
+    city = models.CharField(max_length=100, verbose_name="شهر")
     
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=" ایجاد شده در")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
     
     paid = models.BooleanField(default=False, verbose_name="Paid")
@@ -34,11 +34,11 @@ class Order(models.Model):
 
     class Meta:
         ordering = ('-created_at',)
-        verbose_name = "Order"
-        verbose_name_plural = "Orders"
+        verbose_name = "سفارش"
+        verbose_name_plural = "سفارشات"
 
     def __str__(self):
-        return f"Order {self.id} by {self.user.get_username() if self.user else 'Guest'}"
+        return f"سفارش  {self.id} بوسیله {self.user.get_username() if self.user else 'مهمان'}"
 
 # You would also typically have an OrderItem model:
 # class OrderItem(models.Model):
