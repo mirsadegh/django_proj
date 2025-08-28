@@ -1,0 +1,137 @@
+
+/* تنظیمات RTL برای اسلایدر محصولات */
+.products-slick {
+    direction: rtl !important;
+    overflow: visible !important;
+    position: relative;
+    padding: 0 40px !important;
+}
+
+/* استایل‌های ضروری برای اسلایدر */
+.products-slick .slick-arrow {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 1000 !important;
+    background: #d10024 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    border: none !important;
+    outline: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    font-size: 0 !important;
+    transition: all 0.3s ease !important;
+}
+
+.products-slick .slick-arrow:hover {
+    background: #b8001f !important;
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+.products-slick .slick-arrow:before {
+    font-family: 'FontAwesome' !important;
+    font-size: 18px !important;
+    color: white !important;
+    opacity: 1 !important;
+}
+
+/* تنظیمات RTL برای فلش‌ها */
+.products-slick .slick-prev {
+    right: 0 !important;
+    left: auto !important;
+}
+
+.products-slick .slick-next {
+    left: 0 !important;
+    right: auto !important;
+}
+
+.products-slick .slick-prev:before {
+    content: '\f105' !important; /* فلش راست برای previous در RTL */
+}
+
+.products-slick .slick-next:before {
+    content: '\f104' !important; /* فلش چپ برای next در RTL */
+}
+
+/* تنظیمات فضای اسلایدر */
+.products-slick .slick-list {
+    padding: 0 10px !important;
+    overflow: hidden !important;
+    height: auto !important;
+}
+
+.products-slick .slick-slide {
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+}
+
+.products-slick .slick-track {
+    display: flex !important;
+    align-items: stretch !important;
+    overflow: hidden !important;
+}
+
+/* تنظیمات موبایل */
+@media (max-width: 768px) {
+    .products-slick {
+        padding: 0 35px !important;
+    }
+    
+    .products-slick .slick-arrow {
+        width: 35px !important;
+        height: 35px !important;
+    }
+    
+    .products-slick .slick-arrow:before {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-slick {
+        padding: 0 30px !important;
+    }
+    
+    .products-slick .slick-arrow {
+        width: 30px !important;
+        height: 30px !important;
+    }
+}
+
+/* حل مشکل نمایش محصولات در اسلایدر */
+.products-slick .product {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 420px !important; /* ارتفاع حداقلی یکسان */
+}
+
+/* تنظیم ارتفاع یکسان برای کارت‌های محصول */
+.products-slick .product-body {
+    flex: 1 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.products-slick .add-to-cart {
+    margin-top: auto !important;
+}
+
+/* بهبود نمایش در حالت لودینگ */
+.products-slick.slick-loading {
+    visibility: hidden !important;
+}
+
+.products-slick:not(.slick-loading) {
+    visibility: visible !important;
+}
+

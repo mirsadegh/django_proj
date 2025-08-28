@@ -1,4 +1,10 @@
 {% load custom_filters static %}
+{% load static %}
+
+
+<!-- لینک به فایل CSS جداگانه -->
+<link rel="stylesheet" href="{% static 'main/css/new_product_slider.css' %}">
+
 <div class="section">
     <!-- container -->
     <div class="container">
@@ -22,8 +28,8 @@
                             {% if products %}
                                 <div class="products-slick" dir="rtl">
                                     {% for product in products %}
-                                        <div class="product">
-                                            <div class="product-img">
+                                        <div class="product slick-slide">
+                                            <div class="product-img" style="height: 200px; overflow: hidden;">
                                                 {% if product.image %}
                                                     <img src="{{ product.image.url }}" 
                                                          alt="{{ product.title }}" 
@@ -69,9 +75,9 @@
                                                             <i class="fa {% if product_interests|get_item:product.id %}fa-heart text-red{% else %}fa-heart-o{% endif %}"></i>
                                                             <span class="tooltipp">
                                                                 {% if product_interests|get_item:product.id %}
-                                                                    حذف از علاقه مندی
+                                                                    حذف از علاقه‌مندی
                                                                 {% else %}
-                                                                    افزودن به علاقه مندی
+                                                                    افزودن به علاقه‌مندی
                                                                 {% endif %}
                                                             </span>
                                                         </button>
@@ -88,12 +94,13 @@
                                                         <span class="tooltipp">نمایش</span>
                                                     </button>
                                                 </div>
-                                            </div>
-                                            <div class="add-to-cart">
+                                                <div class="add-to-cart">
                                                 <button class="add-to-cart-btn" data-product-id="{{ product.id }}">
                                                     <i class="fa fa-shopping-cart"></i> افزودن به سبد خرید
                                                 </button>
                                             </div>
+                                            </div>
+                                            
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -115,92 +122,5 @@
     <!-- /container -->
 </div>
 
-<!-- اضافه کردن CSS مخصوص اسلایدر -->
-<style>
-/* استایل‌های ضروری برای اسلایدر */
-.products-slick .slick-arrow {
-    position: absolute !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    z-index: 1000 !important;
-    background: #d10024 !important;
-    color: white !important;
-    border-radius: 50% !important;
-    width: 50px !important;
-    height: 50px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    border: none !important;
-    outline: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
-    font-size: 0 !important;
-}
-
-.products-slick .slick-arrow:hover {
-    background: #b8001f !important;
-    transform: translateY(-50%) scale(1.1) !important;
-}
-
-.products-slick .slick-arrow:before {
-    font-family: 'FontAwesome' !important;
-    font-size: 18px !important;
-    color: white !important;
-}
-
-.products-slick .slick-prev {
-    right: -25px !important;
-    left: auto !important;
-}
-
-.products-slick .slick-next {
-    left: -25px !important;
-    right: auto !important;
-}
-
-.products-slick .slick-prev:before {
-    content: '\f104' !important;
-}
-
-.products-slick .slick-next:before {
-    content: '\f105' !important;
-}
-
-.products-slick .slick-list {
-    padding: 0 50px !important;
-    overflow: visible !important;
-}
-
-.products-slick .slick-slide {
-    padding: 0 10px !important;
-}
-
-/* RTL fixes */
-[dir="rtl"] .products-slick .slick-prev {
-    right: -25px !important;
-    left: auto !important;
-}
-
-[dir="rtl"] .products-slick .slick-next {
-    left: -25px !important;
-    right: auto !important;
-}
-
-@media (max-width: 768px) {
-    .products-slick .slick-arrow {
-        width: 40px !important;
-        height: 40px !important;
-    }
-    
-    .products-slick .slick-arrow:before {
-        font-size: 14px !important;
-    }
-    
-    .products-slick .slick-list {
-        padding: 0 45px !important;
-    }
-}
-</style>
+<!-- اسکریپت اضافی برای اطمینان از عملکرد اسلایدر -->
+<script src="{% static 'main/js/new_product_slider.js' %}"></script>

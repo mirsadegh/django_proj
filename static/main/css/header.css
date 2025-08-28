@@ -1,0 +1,123 @@
+
+/* استایل‌های سفارشی برای هدر */
+#header {
+    padding: 15px 0;
+}
+
+.header-ctn {
+    direction: rtl;
+}
+
+/* استایل برای بخش علاقه‌مندی */
+.wishlist-container a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #2B2D42;
+    text-decoration: none;
+    position: relative;
+    padding: 5px 10px;
+    transition: all 0.3s;
+}
+
+.wishlist-container a:hover {
+    color: #D10024;
+}
+
+.wishlist-container .wishlist-qty {
+    position: absolute;
+    top: -8px;
+    right: 33px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    background: #777; /* رنگ سبز برای شمارنده علاقه‌مندی */
+    color: #FFF;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* استایل برای بخش سبد خرید */
+.cart-container {
+    display: flex;
+    align-items: center;
+}
+
+/* استایل برای دکمه منو */
+.menu-toggle a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #2B2D42;
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: all 0.3s;
+}
+
+.menu-toggle a:hover {
+    color: #D10024;
+}
+
+.menu-toggle span {
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.header-search form {
+    display: flex;
+    direction: rtl;
+}
+
+.header-search .input {
+    width: 100%;
+    border: 1px solid #E4E7ED;
+    border-left: none;
+    border-radius: 0 40px 40px 0;
+    padding: 0 15px;
+    height: 40px;
+}
+
+.header-search .search-btn {
+    border: none;
+    background: #D10024;
+    color: #FFF;
+    border-radius: 40px 0 0 40px;
+    padding: 0 15px;
+    height: 40px;
+    cursor: pointer;
+}
+
+/* رسپانسیو برای موبایل */
+@media (max-width: 768px) {
+    .header-ctn {
+        justify-content: space-around !important;
+    }
+    
+    .header-ctn > div {
+        flex: 1;
+        text-align: center;
+    }
+    
+    .header-search {
+        margin: 10px 0;
+    }
+    
+    .wishlist-container span,
+    .menu-toggle span {
+        display: none;
+    }
+    
+    .wishlist-container,
+    .cart-container,
+    .menu-toggle {
+        margin: 0 5px;
+    }
+}
+
+#cart-item-count { 
+    position: absolute;
+    top: -1px;
+    right: -3px;
+}

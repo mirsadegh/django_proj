@@ -1,29 +1,23 @@
 {% load static %}
 
 
+<link rel="stylesheet" href="{% static 'main/css/header.css' %}">
 <header>
     <!-- TOP HEADER -->
     <div id="top-header">
         <div class="container">
-            
-                <ul class="header-links pull-left">
-                    {% if request.user.is_authenticated %}
-                    
-                    <li><a href="{% url 'profile' %}"><i class="fa fa-user-o"></i> {{ request.user.name|default:request.user.email  }}</a></li>
-                    <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
-                        
-                          {% csrf_token %} 
-                    </form>
-                  
-                    <li><a href="#" id="logout-link"><i class="fa fa-sign-out fa-1x fa-flip-horizontal" aria-hidden="true"></i></li>
-                       
-
-                    {% else %}
-                     <li><a href="{% url 'login' %}"><i class="fa fa-user-o"></i> ورود</a></li>
-                     <li><a href="{% url 'register' %}"><i class="fa fa-user-o"></i> ثبت‌نام</a></li>
-                    {% endif %}
-
-                </ul>
+            <ul class="header-links pull-left">
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'profile' %}"><i class="fa fa-user-o"></i> {{ request.user.name|default:request.user.email  }}</a></li>
+                <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
+                    {% csrf_token %} 
+                </form>
+                <li><a href="#" id="logout-link"><i class="fa fa-sign-out fa-1x fa-flip-horizontal" aria-hidden="true"></i></a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}"><i class="fa fa-user-o"></i> ورود</a></li>
+                <li><a href="{% url 'register' %}"><i class="fa fa-user-o"></i> ثبت‌نام</a></li>
+                {% endif %}
+            </ul>
         </div>
     </div>
     <!-- /TOP HEADER -->
@@ -33,7 +27,7 @@
         <!-- container -->
         <div class="container">
             <!-- row -->
-            <div class="row">
+            <div class="row align-items-center">
                 <!-- LOGO -->
                 <div class="col-md-3">
                     <div class="header-logo">
@@ -45,10 +39,10 @@
                 <!-- /LOGO -->
 
                 <!-- SEARCH BAR -->
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="header-search text-right">
-                        <form action="{% url 'search' %}" method="GET">
-                            <input class="input" name="q" placeholder="جستجو" required>
+                        <form action="{% url 'search' %}" method="GET" class="d-flex">
+                            <input class="input flex-grow-1" name="q" placeholder="جستجو" required>
                             <button type="submit" class="search-btn">جستجو</button>
                         </form>
                     </div>
@@ -56,28 +50,32 @@
                 <!-- /SEARCH BAR -->
 
                 <!-- ACCOUNT -->
-                <div class="col-md-3 clearfix">
-                    <div class="header-ctn">
-                        <!-- Wishlist -->
-                        <div>
-                            <a href="{% url 'interests:interest_list' %}">
-                                <i class="fa fa-heart-o"></i>
-                                <span>علاقه مندی</span>
-                                
-                                <div class="qty">{{ total_interests|default:"0" }}</div>
-                            </a>
-                        </div>
-                        <!-- /Wishlist -->
+                <div class="col-md-4">
+                    <div class="header-ctn d-flex justify-content-end align-items-center">
+                        <!-- Wishlist & Cart Container -->
+                        <div class="d-flex align-items-center">
+                            <!-- Wishlist -->
+                            <div class="wishlist-container mx-2">
+                                <a href="{% url 'interests:interest_list' %}" class="d-flex flex-column align-items-center position-relative">
+                                    <i class="fa fa-heart-o"></i>
+                                    <span class="mt-1">علاقه‌مندی</span>
+                                    <div class="qty wishlist-qty">{{ total_interests|default:"0" }}</div>
+                                </a>
+                            </div>
+                            <!-- /Wishlist -->
 
-                        <!-- Cart -->
-                        {% include './cart.html' %}
-                        <!-- /Cart -->
+                            <!-- Cart -->
+                            <div class="cart-container mx-2">
+                                {% include './cart.html' %}
+                            </div>
+                            <!-- /Cart -->
+                        </div>
 
                         <!-- Menu Toogle -->
-                        <div class="menu-toggle">
-                            <a href="#">
+                        <div class="menu-toggle mx-2">
+                            <a href="#" class="d-flex flex-column align-items-center">
                                 <i class="fa fa-bars"></i>
-                                <span>Menu</span>
+                                <span class="mt-1">منو</span>
                             </a>
                         </div>
                         <!-- /Menu Toogle -->
@@ -91,3 +89,4 @@
     </div>
     <!-- /MAIN HEADER -->
 </header>
+
