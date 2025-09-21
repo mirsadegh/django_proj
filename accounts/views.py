@@ -24,7 +24,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, UpdateView
 
 from .forms import ProfileUpdateForm, UserUpdateForm
-
+from utils.email_sender import AccountActivationEmailSender
 
 
 
@@ -50,23 +50,6 @@ class EmailLoginView(AnonymousUserRequiredMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
-def send_email(request, user):
-    try:
-        current_site = get_current_site(request)
-        mail_subject = _('Activate your account')
-        message = render_to_string('accounts/account_activation_email.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        email = EmailMessage(mail_subject, message, to=[user.email])
-        email.send()
-    except Exception as e:
-        # می‌توانید خطا را ثبت کنید یا اقدام مناسب انجام دهید
-        print("Error sending email:", e)
-        # یا از logging استفاده کنید
-
 
 class RegisterView(AnonymousUserRequiredMixin, View):
     form_class = CustomUserCreationForm
@@ -84,7 +67,9 @@ class RegisterView(AnonymousUserRequiredMixin, View):
             user.is_active = False
             user.save()
 
-            send_email(request, user)
+           
+            AccountActivationEmailSender(request, user)
+
 
             return render(request, self.pending_template_name, {'email': user.email})
         return render(request, self.template_name, {'form': form})
@@ -127,7 +112,9 @@ class ResendActivationEmailView(View):
 
         try:
             user = CustomUser.objects.get(email=email, is_active=False)
-            send_email(request, user)
+         
+            AccountActivationEmailSender(request, user)
+
             messages.success(
                 request, 'ایمیل فعال‌سازی مجدداً ارسال شد. لطفاً صندوق ایمیل خود را بررسی کنید.')
         except CustomUser.DoesNotExist:
