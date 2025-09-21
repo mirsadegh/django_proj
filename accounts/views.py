@@ -28,8 +28,6 @@ from .forms import ProfileUpdateForm, UserUpdateForm
 
 
 
-
-
 class EmailLoginView(AnonymousUserRequiredMixin, View):
     form_class = EmailAuthenticationForm
     template_name = 'accounts/login.html'
